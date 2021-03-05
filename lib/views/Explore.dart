@@ -19,11 +19,11 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePage extends State<ExplorePage> {
   String selectedSegment = "My books";
-  List<String> categories = ["My books","My newspapers","My magazines"];
+  List<String> categories = ["My books", "My newspapers", "My magazines"];
   List<SelectedCats> selectedCatsList = List();
-  List<dynamic> categoriesList = ["Books","Newspapers","Magazines"];
+  List<dynamic> categoriesList = ["Books", "Newspapers", "Magazines"];
   AutoScrollController controller;
-  Map<String,dynamic> myProductsList = {};
+  Map<String, dynamic> myProductsList = {};
   bool logged;
 
   @override
@@ -44,71 +44,107 @@ class _ExplorePage extends State<ExplorePage> {
   }
 
   // +added
-  Future _booksData () async {
-    String url = urlSt+ '/api/v1/allbooks';
+  Future _booksData() async {
+    String url = urlSt + '/api/v1/allbooks';
 
-    Map<String, String> headers = {"Content-type": "application/json","Accept": "application/json","Authorization": authKey};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization": authKey
+    };
     Response response = await get(url, headers: headers);
     int statusCode = response.statusCode;
     List body = jsonDecode(response.body);
     List<Category> mags = [];
     body.forEach((element) {
       setState(() {
-        mags.add(Category(element['id'],element['title'], element['type'],element['publisher_id'],element['catagory_id'], urlSt+'storage'+element['cover_image']));
+        mags.add(Category(
+          element['id'],
+          element['title'],
+          element['type'],
+          element['publisher_id'],
+          element['catagory_id'],
+          urlSt + 'storage' + element['cover_image'],
+          element['catagory']['name'],
+          element['publisher']['name'],
+          element['created_at'],
+        ));
       });
     });
     setState(() {
-      myProductsList.addAll({
-        "My books" : mags
-      });
+      myProductsList.addAll({"My books": mags});
     });
     return body;
   }
 
-  Future _newspaperData () async {
-    String url = urlSt+ '/api/v1/allnewspapers';
+  Future _newspaperData() async {
+    String url = urlSt + '/api/v1/allnewspapers';
 
-    Map<String, String> headers = {"Content-type": "application/json","Accept": "application/json","Authorization": authKey};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization": authKey
+    };
     Response response = await get(url, headers: headers);
     int statusCode = response.statusCode;
     List body = jsonDecode(response.body);
     List<Category> mags = [];
     body.forEach((element) {
       setState(() {
-        mags.add(Category(element['id'],element['title'], element['type'],element['publisher_id'],element['catagory_id'], urlSt+'storage'+element['cover_image']));
+        mags.add(Category(
+          element['id'],
+          element['title'],
+          element['type'],
+          element['publisher_id'],
+          element['catagory_id'],
+          urlSt + 'storage' + element['cover_image'],
+          element['catagory']['name'],
+          element['publisher']['name'],
+          element['created_at'],
+        ));
       });
     });
     setState(() {
-      myProductsList.addAll({
-        "My newspapers" : mags
-      });
+      myProductsList.addAll({"My newspapers": mags});
     });
     return body;
   }
 
-  Future _magazineData () async {
-    String url = urlSt+ '/api/v1/allmagazines';
+  Future _magazineData() async {
+    String url = urlSt + '/api/v1/allmagazines';
 
-    Map<String, String> headers = {"Content-type": "application/json","Accept": "application/json","Authorization": authKey};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization": authKey
+    };
     Response response = await get(url, headers: headers);
     int statusCode = response.statusCode;
     List body = jsonDecode(response.body);
     List<Category> mags = [];
     body.forEach((element) {
       setState(() {
-        mags.add(Category(element['id'],element['title'], element['type'],element['publisher_id'],element['catagory_id'], urlSt+'storage'+element['cover_image']));
+        mags.add(Category(
+          element['id'],
+          element['title'],
+          element['type'],
+          element['publisher_id'],
+          element['catagory_id'],
+          urlSt + 'storage' + element['cover_image'],
+          element['catagory']['name'],
+          element['publisher']['name'],
+          element['created_at'],
+        ));
       });
     });
     setState(() {
-      myProductsList.addAll({
-        "My magazines" : mags
-      });
+      myProductsList.addAll({"My magazines": mags});
     });
     return mags;
   }
 
-
-  checkIfAuthenticated() async {  // could be a long running task, like a fetch from keychain
+  checkIfAuthenticated() async {
+    // could be a long running task, like a fetch from keychain
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLogged = prefs.getBool('isLoggedIn') ?? false;
     return isLogged;
@@ -117,9 +153,11 @@ class _ExplorePage extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     List<String> selectedCats = [];
-    selectedCatsList.forEach((element) { selectedCats.add(element.name); });
-    if(logged != null){
-      if(logged){
+    selectedCatsList.forEach((element) {
+      selectedCats.add(element.name);
+    });
+    if (logged != null) {
+      if (logged) {
         return Scaffold(
           body: SafeArea(
             child: Padding(
@@ -135,8 +173,7 @@ class _ExplorePage extends State<ExplorePage> {
                         style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20
-                        ),
+                            fontSize: 20),
                       ),
                     ),
                   ),
@@ -173,9 +210,9 @@ class _ExplorePage extends State<ExplorePage> {
                         scrollDirection: Axis.horizontal,
                         physics: ClampingScrollPhysics(),
                         controller: controller,
-                        itemBuilder: (context, index){
+                        itemBuilder: (context, index) {
                           return GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 setState(() {
                                   selectedSegment = categories[index];
                                 });
@@ -187,91 +224,137 @@ class _ExplorePage extends State<ExplorePage> {
                                   Container(
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.only(right: 25),
-                                    child: Text(categories[index], style: TextStyle(
-                                        color: selectedSegment == categories[index] ? Colors.black87 : Colors.grey,
-                                        fontWeight: selectedSegment == categories[index] ? FontWeight.w600 : FontWeight.w400,
-                                        fontSize: selectedSegment == categories[index] ? 23 : 18
-                                    ),),
-                                  ),
-                                  SizedBox(height: 3,),
-                                  selectedSegment == categories[index] ? Container(
-                                    height: 5,
-                                    width: 16,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff007084),
-                                        borderRadius: BorderRadius.circular(12)
+                                    child: Text(
+                                      categories[index],
+                                      style: TextStyle(
+                                          color: selectedSegment ==
+                                                  categories[index]
+                                              ? Colors.black87
+                                              : Colors.grey,
+                                          fontWeight: selectedSegment ==
+                                                  categories[index]
+                                              ? FontWeight.w600
+                                              : FontWeight.w400,
+                                          fontSize: selectedSegment ==
+                                                  categories[index]
+                                              ? 23
+                                              : 18),
                                     ),
-                                  ) : Container()
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
+                                  selectedSegment == categories[index]
+                                      ? Container(
+                                          height: 5,
+                                          width: 16,
+                                          decoration: BoxDecoration(
+                                              color: Color(0xff007084),
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                        )
+                                      : Container()
                                 ],
-                              )
-                          );
+                              ));
                         }),
                   ),
-                  SizedBox(height: 5,),
-                  myProductsList[selectedSegment] != null ?
-                  Expanded(
-                    child: StaggeredGridView.countBuilder(
-                      padding: EdgeInsets.all(0),
-                      crossAxisCount: 2,
-                      itemCount: myProductsList[selectedSegment].length,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: (){
-                            if(selectedSegment == "My books")
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetails( myProductsList[selectedSegment][index])));
-                            else if(selectedSegment == "My newspapers")
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => MagAndNewsDetails(myProductsList[selectedSegment][index],2)));
-                            else
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => MagAndNewsDetails(myProductsList[selectedSegment][index],1)));
-                          },
-                          child: Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(20),
-                                  height: index.isEven ? 200 : 240,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    image: DecorationImage(
-                                      image: NetworkImage(myProductsList[selectedSegment][index].image),
-                                      fit: BoxFit.fill,
+                  SizedBox(
+                    height: 5,
+                  ),
+                  myProductsList[selectedSegment] != null
+                      ? Expanded(
+                          child: StaggeredGridView.countBuilder(
+                            padding: EdgeInsets.all(0),
+                            crossAxisCount: 2,
+                            itemCount: myProductsList[selectedSegment].length,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (selectedSegment == "My books")
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BookDetails(
+                                                myProductsList[selectedSegment]
+                                                    [index])));
+                                  else if (selectedSegment == "My newspapers")
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MagAndNewsDetails(
+                                                    myProductsList[
+                                                        selectedSegment][index],
+                                                    2)));
+                                  else
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MagAndNewsDetails(
+                                                    myProductsList[
+                                                        selectedSegment][index],
+                                                    1)));
+                                },
+                                child: Column(children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.all(20),
+                                    height: index.isEven ? 200 : 240,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                            myProductsList[selectedSegment]
+                                                    [index]
+                                                .image),
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 18,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      myProductsList[selectedSegment][index].name,
-                                      style: kTitleTextStyle,
-                                    ),
-                                    Text(
-                                      'Price: \$${myProductsList[selectedSegment][index].price}',
-                                      style: TextStyle(
-                                        color: kTextColor.withOpacity(.5),
+                                  SizedBox(
+                                    height: 18,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        myProductsList[selectedSegment][index]
+                                            .name,
+                                        style: kTitleTextStyle,
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ]),
-                        );
-                      },
-                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                    ),
-                  ) : Container(height: 200, child: Center(child: CircularProgressIndicator(),),),
+                                      Text(
+                                        'Price: \$${myProductsList[selectedSegment][index].price}',
+                                        style: TextStyle(
+                                          color: kTextColor.withOpacity(.5),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ]),
+                              );
+                            },
+                            staggeredTileBuilder: (index) =>
+                                StaggeredTile.fit(1),
+                          ),
+                        )
+                      : Container(
+                          height: 200,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
                 ],
               ),
             ),
           ),
         );
-      }else{
+      } else {
         return FirstPage();
       }
-    }else{
+    } else {
       return Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -286,7 +369,8 @@ class MultiSelectChip extends StatefulWidget {
   final List<SelectedCats> prevSelected;
   final Function(List<dynamic>) onSelectionChanged;
 
-  MultiSelectChip(this.categoriesList, this.prevSelected,{this.onSelectionChanged});
+  MultiSelectChip(this.categoriesList, this.prevSelected,
+      {this.onSelectionChanged});
 
   @override
   _MultiSelectChipState createState() => _MultiSelectChipState();
@@ -297,12 +381,10 @@ class SelectedCats {
 
   SelectedCats(this.name);
 
-  SelectedCats.fromJson(Map<String, dynamic> json)
-      : name = json['name'];
+  SelectedCats.fromJson(Map<String, dynamic> json) : name = json['name'];
 
-  Map<String, dynamic> toJson() =>
-      {
-        'name' : name,
+  Map<String, dynamic> toJson() => {
+        'name': name,
       };
 }
 
@@ -314,23 +396,26 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
     List<Widget> choices = List();
     selectedChoices = widget.prevSelected;
     widget.categoriesList.forEach((item) {
-      choices.add(
-          Container(
-            padding: const EdgeInsets.all(2.0),
-            child: ChoiceChip(
-              label: Text(item),
-              selected: selectedChoices.where((element) => element.name == item).isNotEmpty,
-              onSelected: (selected) {
-                setState(() {
-                  selectedChoices.where((element) => element.name == item).isNotEmpty
-                      ? selectedChoices.removeWhere((element) => element.name == item)
-                      : selectedChoices.add(SelectedCats(item));
-                  widget.onSelectionChanged(selectedChoices);
-                });
-              },
-            ),
-          )
-      );
+      choices.add(Container(
+        padding: const EdgeInsets.all(2.0),
+        child: ChoiceChip(
+          label: Text(item),
+          selected: selectedChoices
+              .where((element) => element.name == item)
+              .isNotEmpty,
+          onSelected: (selected) {
+            setState(() {
+              selectedChoices
+                      .where((element) => element.name == item)
+                      .isNotEmpty
+                  ? selectedChoices
+                      .removeWhere((element) => element.name == item)
+                  : selectedChoices.add(SelectedCats(item));
+              widget.onSelectionChanged(selectedChoices);
+            });
+          },
+        ),
+      ));
     });
 
     return choices;

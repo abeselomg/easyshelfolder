@@ -2,10 +2,9 @@ import 'package:easy_shelf/models/book_model.dart';
 import 'package:easy_shelf/models/single_book_model.dart';
 import 'package:flutter/material.dart';
 
-List<BookModel> getBooks(){
-
+List<BookModel> getBooks() {
   List<BookModel> books = new List<BookModel>();
-  BookModel bookModel  = new BookModel();
+  BookModel bookModel = new BookModel();
 
   //1
   bookModel.imgAssetPath = "assets/mermaid.png";
@@ -22,7 +21,8 @@ Christian Andersen.''';
   //1
   bookModel.imgAssetPath = "assets/blabla.png";
   bookModel.title = "Willows Of Fate";
-  bookModel.description = '''Is there room in the hands of fate for free will?All her life, Desdemona has seen things others haven’t.''';
+  bookModel.description =
+      '''Is there room in the hands of fate for free will?All her life, Desdemona has seen things others haven’t.''';
   bookModel.rating = 4;
   bookModel.categorie = "Drama";
 
@@ -32,8 +32,7 @@ Christian Andersen.''';
   return books;
 }
 
-List<SingleBookModel> getSingleBooks(){
-
+List<SingleBookModel> getSingleBooks() {
   List<SingleBookModel> books = new List<SingleBookModel>();
   SingleBookModel singleBookModel = new SingleBookModel();
 
@@ -45,7 +44,6 @@ List<SingleBookModel> getSingleBooks(){
 
   singleBookModel = new SingleBookModel();
 
-
   //2
   singleBookModel.imgAssetPath = "assets/time_of_witches.png";
   singleBookModel.title = "Tim of Witched";
@@ -53,7 +51,6 @@ List<SingleBookModel> getSingleBooks(){
   books.add(singleBookModel);
 
   singleBookModel = new SingleBookModel();
-
 
   //3
   singleBookModel.imgAssetPath = "assets/infinite_future.png";
@@ -63,7 +60,6 @@ List<SingleBookModel> getSingleBooks(){
 
   singleBookModel = new SingleBookModel();
 
-
   //4
   singleBookModel.imgAssetPath = "assets/junot_diaz.png";
   singleBookModel.title = "Sun the moon";
@@ -71,7 +67,6 @@ List<SingleBookModel> getSingleBooks(){
   books.add(singleBookModel);
 
   singleBookModel = new SingleBookModel();
-
 
   //1
   singleBookModel.imgAssetPath = "assets/dancing_with_the_tiger.png";
@@ -82,7 +77,6 @@ List<SingleBookModel> getSingleBooks(){
   singleBookModel = new SingleBookModel();
 
   return books;
-
 }
 
 // Colors
@@ -90,7 +84,6 @@ const kTextColor = Color(0xFF0D1333);
 const kBlueColor = Color(0xFF6E8AFA);
 const kBestSellerColor = Color(0xFFFFD073);
 const kGreenColor = Color(0xFF49CC96);
-
 
 // My Text Styles
 const kHeadingextStyle = TextStyle(

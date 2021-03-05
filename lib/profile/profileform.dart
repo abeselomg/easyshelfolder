@@ -5,6 +5,7 @@ import 'package:easy_shelf/helpers/Constants.dart';
 import 'package:easy_shelf/helpers/UserData.dart';
 import 'package:easy_shelf/helpers/sharedPref.dart';
 import 'package:easy_shelf/profile/profileform.dart';
+import 'package:easy_shelf/profile/profilescreen.dart';
 import 'package:easy_shelf/views/home.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -12,38 +13,38 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bl;
-import 'ResetPass.dart';
-import 'Signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+// import 'ResetPass.dart';
+// import 'Signup.dart';
 
 class FormData {
   String email;
   String password;
 
-  FormData(this.email,this.password);
+  FormData(this.email, this.password);
 
   FormData.fromJson(Map<String, dynamic> json)
       : email = json['email_or_phone'],
         password = json['password'];
 
-
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'email_or_phone': email,
         'password': password,
       };
 }
+
 // Define a custom Form widget.
-class LoginPage extends StatefulWidget with NavigationStates {
+class ProfileFormPage extends StatefulWidget with NavigationStates {
   final int type;
-  LoginPage(this.type);
+  ProfileFormPage(this.type);
   @override
-  _LoginPage createState() => _LoginPage(this.type);
+  _ProfileFormPage createState() => _ProfileFormPage(this.type);
 }
 
-class _LoginPage extends State<LoginPage> {
+class _ProfileFormPage extends State<ProfileFormPage> {
   final int type;
 
-  _LoginPage(this.type);
+  _ProfileFormPage(this.type);
   var loggedIn = false;
   Constants constants = Constants();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
@@ -52,9 +53,13 @@ class _LoginPage extends State<LoginPage> {
   TextEditingController passInputController;
   TextEditingController codeInputController;
   TextEditingController emailInputController;
+  TextEditingController fnameInputController;
+  TextEditingController lnameInputController;
+
   var _pressed;
-  String countryCode,countryName;
+  String countryCode, countryName;
   SharedPref sharedPref = SharedPref();
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   ProgressDialog progressDialog;
   bool countDown = false;
 
@@ -67,6 +72,8 @@ class _LoginPage extends State<LoginPage> {
     passInputController = new TextEditingController();
     codeInputController = new TextEditingController();
     emailInputController = new TextEditingController();
+    fnameInputController = new TextEditingController();
+    lnameInputController = new TextEditingController();
     super.initState();
   }
 
@@ -76,16 +83,16 @@ class _LoginPage extends State<LoginPage> {
     var timeFormatter = new DateFormat.jm();
     String formattedDate = formatter.format(now);
     String formattedTime = timeFormatter.format(now);
-      Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (BuildContext context) => ProfileFormPage(0
-           )));
+    // Navigator.pushReplacement(
+    // context, MaterialPageRoute(builder: (BuildContext context) => ProfileFormPage(
+    //      )));
 
-                sharedPref.setLoggedIn('logged',true);
+    sharedPref.setLoggedIn('logged', true);
     // if(this.type == 1){
     //   FormData data = FormData(phoneInputController.text,passInputController.text);
     //   _userLogin(jsonEncode(data))
     //   .then((value) async {
-        
+
     //     if(value['status'] == 200){
     //       value = jsonDecode(value['body']);
     //       UserData userData = UserData(
@@ -127,7 +134,6 @@ class _LoginPage extends State<LoginPage> {
     //           );
     //         });
     //     }
-
 
     //   });
     // }
@@ -207,31 +213,26 @@ class _LoginPage extends State<LoginPage> {
     return true;
   }
 
-  Future<Map<dynamic,dynamic>> _userLogin(String data) async {
-    String url = urlSt+'/api/v1/api_login';
-    Map<String, String> headers = {"Content-type": "application/json","Accept": "application/json"};
+  Future<Map<dynamic, dynamic>> _userLogin(String data) async {
+    String url = urlSt + '/api/v1/api_login';
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String json = data;
     Response response = await post(url, headers: headers, body: json);
     int statusCode = response.statusCode;
     String body = response.body;
-    return { "body" : body , "status" : statusCode };
+    return {"body": body, "status": statusCode};
   }
 
-    Widget _title() {
-    return Image.asset("assets/logo.png",
-        width: 130,
-        height: 130,
-        gaplessPlayback: false,
-        fit: BoxFit.fill
-    );
+  Widget _title() {
+    return Image.asset("assets/images/shelf.png",
+        width: 130, height: 130, gaplessPlayback: false, fit: BoxFit.fill);
   }
 
-  
   Future sendVerificationCode(String phoneNumber) async {
-
-    Map <String, dynamic> body = {
-      "phoneNumber" : phoneNumber
-    };
+    Map<String, dynamic> body = {"phoneNumber": phoneNumber};
 
     Map<String, String> headers = {
       'Accept': 'application/json',
@@ -239,12 +240,13 @@ class _LoginPage extends State<LoginPage> {
     };
 
     try {
-      return await post(Uri.encodeFull(urlSt+ "/auth/send-verification-code"),
-          headers: headers, body: json.encode(body))
+      return await post(Uri.encodeFull(urlSt + "/auth/send-verification-code"),
+              headers: headers, body: json.encode(body))
           .then((Response response) async {
         final int statusCode = response.statusCode;
-        print("*************************** sendVerificationCode ${response.statusCode}***********************************");
-        if(response.statusCode == 202){
+        print(
+            "*************************** sendVerificationCode ${response.statusCode}***********************************");
+        if (response.statusCode == 202) {
           print("Success");
         }
         if (statusCode < 200 || statusCode > 400 || json == null) {
@@ -252,23 +254,18 @@ class _LoginPage extends State<LoginPage> {
         }
         return statusCode;
       });
-    } catch (Exception,s) {
+    } catch (Exception, s) {
       print("Error AuthAPI sendVerificationCode : ${Exception.toString()}");
     }
   }
 
- 
-
   Future<void> onPhoneNumberSubmit(String value) async {
-      if (value.isNotEmpty) {
-        // _sendCodeToPhoneNumber();
-         var phoneNumber =
-              "+251" + value;
-        await sendVerificationCode(phoneNumber);
-        
-      }
+    if (value.isNotEmpty) {
+      // _sendCodeToPhoneNumber();
+      var phoneNumber = "+251" + value;
+      await sendVerificationCode(phoneNumber);
+    }
   }
-
 
   Widget showPhoneInput() {
     return Padding(
@@ -282,7 +279,7 @@ class _LoginPage extends State<LoginPage> {
               child: CountryCodePicker(
                 showFlag: false,
                 showFlagDialog: true,
-                onChanged: (c){
+                onChanged: (c) {
                   setState(() {
                     countryCode = c.toString();
                   });
@@ -303,33 +300,27 @@ class _LoginPage extends State<LoginPage> {
                 keyboardType: TextInputType.phone,
                 autofocus: false,
                 maxLength: 10,
-                decoration: new InputDecoration(
-                    hintText: 'Phone'
-                ),
+                decoration: new InputDecoration(hintText: 'Phone'),
                 controller: phoneInputController,
                 validator: phoneValidator,
                 //        onSaved: (value) => _phone = value.trim(),
               ),
             )
           ],
-        )
-    );
+        ));
   }
 
-
   String phoneValidator(String value) {
-   if (value.isEmpty || value.length == 0) {
+    if (value.isEmpty || value.length == 0) {
       return 'Phone can\'t be empty';
-    } else if (value.length < 9){
+    } else if (value.length < 9) {
       return 'Invalid phone entered';
-    }else{
+    } else {
       return null;
     }
   }
 
-
   Widget showPasswordInput() {
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
       child: new TextFormField(
@@ -352,9 +343,9 @@ class _LoginPage extends State<LoginPage> {
   String passValidator(String value) {
     if (value.isEmpty || value.length == 0) {
       return 'Password can\'t be empty';
-    } else if (value.length < 6){
+    } else if (value.length < 6) {
       return 'Password too short';
-    }else{
+    } else {
       return null;
     }
   }
@@ -368,11 +359,27 @@ class _LoginPage extends State<LoginPage> {
     );
     return Material(
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           if (_loginFormKey.currentState.validate()) {
             progressDialog.show();
-            loginUser(context);
-          }else{
+            final SharedPreferences pref = await _prefs;
+
+            pref.setBool("completeprofile", true);
+            progressDialog.hide();
+
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => Profile(
+                    user: UserData(
+                        1,
+                        "+251923805630",
+                        "abeselom@email.com",
+                        "251923805630",
+                        "+251",
+                        "Ethiopia",
+                        "this.password",
+                        null,
+                        null))));
+          } else {
             setState(() {
               _autoValidate = true;
             });
@@ -393,7 +400,7 @@ class _LoginPage extends State<LoginPage> {
               ],
               color: Color.fromRGBO(44, 149, 121, 1.0)),
           child: Text(
-            'Login',
+            'Submit',
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),
@@ -417,8 +424,8 @@ class _LoginPage extends State<LoginPage> {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SignUpPage()));
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => SignUpPage()));
             },
             child: Text(
               'Register',
@@ -439,9 +446,7 @@ class _LoginPage extends State<LoginPage> {
         setState(() {
           loggedIn = true;
         });
-      } else {
-
-      }
+      } else {}
     });
   }
 
@@ -469,12 +474,64 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
+  Widget showLnameInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: new TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        validator: (value) {
+          if (value == null) {
+            return "Input cannot be null";
+          } else {
+            return null;
+          }
+        },
+        decoration: new InputDecoration(
+            hintText: 'Last Name',
+            icon: new Icon(
+              Icons.person,
+              color: Colors.grey,
+            )),
+        controller: lnameInputController,
+//        onSaved: (value) => _email = value.trim(),
+      ),
+    );
+  }
+
+  Widget showFnameInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: new TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        validator: (value) {
+          if (value == null) {
+            return "Input cannot be null";
+          } else {
+            return null;
+          }
+        },
+        decoration: new InputDecoration(
+            hintText: 'First Name',
+            icon: new Icon(
+              Icons.person,
+              color: Colors.grey,
+            )),
+        controller: fnameInputController,
+//        onSaved: (value) => _email = value.trim(),
+      ),
+    );
+  }
+
   String emailValidator(String value) {
     if (value.isEmpty || value.length == 0) {
       return 'Email can\'t be empty';
-    }else if(!validateEmail(value)){
+    } else if (!validateEmail(value)) {
       return 'Please enter a valid email address';
-    }else{
+    } else {
       return null;
     }
   }
@@ -499,7 +556,7 @@ class _LoginPage extends State<LoginPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: CountryCodePicker(
                   showFlag: true,
-                  onChanged: (c){
+                  onChanged: (c) {
                     setState(() {
                       countryCode = c.toString();
                     });
@@ -521,33 +578,29 @@ class _LoginPage extends State<LoginPage> {
                 keyboardType: TextInputType.phone,
                 autofocus: false,
                 maxLength: 9,
-                decoration: new InputDecoration(
-                    hintText: 'Phone'
-                ),
+                decoration: new InputDecoration(hintText: 'Phone'),
                 controller: codeInputController,
                 validator: verificationValidator,
                 //        onSaved: (value) => _phone = value.trim(),
               ),
             )
           ],
-        )
-    );
+        ));
   }
-
 
   String verificationValidator(String value) {
     if (value.isEmpty || value.length == 0) {
       return 'code can\'t be empty';
-    } else if (value.length < 6){
+    } else if (value.length < 6) {
       return 'Invalid code entered';
-    }else{
+    } else {
       return null;
     }
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
-      return Scaffold(
+    return Scaffold(
         body: SingleChildScrollView(
             child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -556,128 +609,108 @@ class _LoginPage extends State<LoginPage> {
 //            height: MediaQuery.of(context).size.height,
                   key: _loginFormKey,
                   autovalidate: _autoValidate,
-                  child: !countDown ? Stack(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                  child: !countDown
+                      ? Stack(
                           children: <Widget>[
-                            Expanded(
-                              flex: 3,
-                              child: SizedBox(),
-                            ),
-                            _title(),
-                            RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                text: this.type == 0 ? "Login by Email" : "Login by Phone",
-                                style: GoogleFonts.portLligatSans(
-                                  textStyle: Theme.of(context).textTheme.display1,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color.fromRGBO(44, 149, 121, 1.0),
-                                ),),
-                            ),
-                            SizedBox(
-                              height: 50,
-                            ),
-                            this.type == 0 ? showEmailInput():
-                            showPhoneInput(),
-                            // if(this.type == 0)
-                            // showPasswordInput(),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            _submitButton(),
                             Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              alignment: Alignment.centerRight,
-                              child: Row(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Text(
-                                    'Forgot Password ?',
-                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                  Expanded(
+                                    flex: 3,
+                                    child: SizedBox(),
+                                  ),
+                                  _title(),
+                                  SizedBox(
+                                    height: 25,
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                      text: "Complete your Profile",
+                                      style: GoogleFonts.portLligatSans(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .display1,
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w700,
+                                        color:
+                                            Color.fromRGBO(44, 149, 121, 1.0),
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    height: 25,
                                   ),
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ResetPass()
-                                          )
-                                      );
-                                    },
-                                    child: Text(
-                                      'Reset',
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(44, 149, 121, 1.0),
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  )
+                                  // showEmailInput(),
+                                  // showPhoneInput(),
+                                  showFnameInput(),
+                                  showLnameInput(),
+                                  showEmailInput(),
+
+                                  // if(this.type == 0)
+                                  // showPasswordInput(),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  _submitButton(),
+
+                                  Expanded(
+                                    flex: 2,
+                                    child: SizedBox(),
+                                  ),
                                 ],
                               ),
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: SizedBox(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: _createAccountLabel(),
-                      ),
+
 //                  Positioned(top: 40, left: 0, child: _backButton()),
 //                Positioned(
 //                    top: -MediaQuery.of(context).size.height * .15,
 //                    right: -MediaQuery.of(context).size.width * .4,
 //                    child: BezierContainer())
-                    ],
-                  ): Stack(
-                    children: <Widget>[
-                      Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                flex: 3,
-                                child: SizedBox(),
-                              ),
-                              _title(),
-                              RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  text: this.type == 0 ? "Login by Email" : "Login by Phone",
-                                  style: GoogleFonts.portLligatSans(
-                                    textStyle: Theme.of(context).textTheme.display1,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(44, 149, 121, 1.0),
-                                  ),),
-                              ),
-                              SizedBox(
-                                height: 50,
-                              ),
-                            ],
-                          )
-                      )
-                    ],
-                  ),
-                )
-            )
-        )
-    );
+                          ],
+                        )
+                      : Stack(
+                          children: <Widget>[
+                            Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 3,
+                                      child: SizedBox(),
+                                    ),
+                                    _title(),
+                                    RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                        text: this.type == 0
+                                            ? "Login by Email"
+                                            : "Login by Phone",
+                                        style: GoogleFonts.portLligatSans(
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .display1,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w700,
+                                          color:
+                                              Color.fromRGBO(44, 149, 121, 1.0),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 50,
+                                    ),
+                                  ],
+                                ))
+                          ],
+                        ),
+                ))));
   }
 }

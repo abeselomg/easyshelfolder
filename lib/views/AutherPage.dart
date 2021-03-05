@@ -12,8 +12,12 @@ class AuthorProfile extends StatefulWidget with NavigationStates {
 }
 
 class _AuthorProfile extends State<AuthorProfile> {
-  List<String> segments = ["Books By this Author","Blog"];
+  List<String> segments = ["Books By this Author",];
+  List<String> segmenter = ["Related Authors",];
+
   String selectedSegment = "Books By this Author";
+  String selectedSegmenter = "Related Authors";
+
   List<BookModel> books = new List<BookModel>();
 
   @override
@@ -33,11 +37,11 @@ class _AuthorProfile extends State<AuthorProfile> {
             //mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TitleHead(
-                title: null,
-                logo: 'assets/logo_small.png',
-                notification: "2",
-              ),
+              // TitleHead(
+              //   title: null,
+              //   logo: 'assets/logo_small.png',
+              //   notification: "2",
+              // ),
               Expanded(
                 child: ListView(
                   shrinkWrap: true,
@@ -53,27 +57,38 @@ class _AuthorProfile extends State<AuthorProfile> {
                         ),
                         elevation: 10.0,
                         child: Container(
-                          height: deviceSize.height * 0.4,
+                          height: deviceSize.height * 0.15,
                           padding: EdgeInsets.symmetric(horizontal: 20.0),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
+                            color: Color(0xFF1EB998),
                             borderRadius: BorderRadius.all(
                               Radius.circular(20.0),
                             ),
                           ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
-                                  Text("Biography", style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500
-                                  ),),
+                                    Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red,
+                                      image: DecorationImage(
+                                        image: CachedNetworkImageProvider("https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"),
+                                        fit: BoxFit.contain,
+                                      ),
+                                      border: Border.all(
+                                        color: Color(0xFF1EB998),
+                                        width: 3.0,
+                                      ),
+                                    ),
+                                  ),
                                   SizedBox(
                                     width: 30.0,
                                   ),
@@ -106,35 +121,13 @@ class _AuthorProfile extends State<AuthorProfile> {
                                   SizedBox(
                                     width: 20.0,
                                   ),
-                                  Container(
-                                    width: 90,
-                                    height: 90,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.red,
-                                      image: DecorationImage(
-                                        image: CachedNetworkImageProvider("https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"),
-                                        fit: BoxFit.contain,
-                                      ),
-                                      border: Border.all(
-                                        color: Colors.blue,
-                                        width: 3.0,
-                                      ),
-                                    ),
-                                  ),
+                              
                                 ],
                               ),
                               SizedBox(
                                 height: 20.0,
                               ),
-                              Container(
-                                padding: EdgeInsets.only(left: 10,right: 10),
-                                child:  ExpandableText(
-                                  "“The Little Mermaid” is a fairy tale written by the Danish author Hans Christian Andersen. The story follows the journey of a young mermaid who is willing to give up her life in the sea as a mermaid to gain a human soul. The tale was first published in 1837 as part of a collection of fairy tales for children.",
-                                  trimLines:4,
-                                  colors: Colors.white,
-                                ),
-                              ),
+                          
                             ],
                           ),
                         )
@@ -168,7 +161,7 @@ class _AuthorProfile extends State<AuthorProfile> {
                                       child: Text(segments[index], style: TextStyle(
                                           color: selectedSegment == segments[index] ? Colors.black87 : Colors.grey,
                                           fontWeight: selectedSegment == segments[index] ? FontWeight.w600 : FontWeight.w400,
-                                          fontSize: selectedSegment == segments[index] ? 23 : 18
+                                          fontSize: selectedSegment == segments[index] ? 18 : 16
                                       ),),
                                     ),
                                     SizedBox(height: 3,),
@@ -202,6 +195,69 @@ class _AuthorProfile extends State<AuthorProfile> {
                             );
                           }),
                     ),
+                   
+                   SizedBox(height: 30,),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      height: 40,
+                      child: ListView.builder(
+                          itemCount: segmenter.length,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: ClampingScrollPhysics(),
+                          itemBuilder: (context, index){
+                            return GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    selectedSegmenter = segmenter[index];
+                                  });
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.only(right: 25),
+                                      child: Text("Related Authors", style: TextStyle(
+                                          color: selectedSegmenter == segmenter[index] ? Colors.black87 : Colors.grey,
+                                          fontWeight: selectedSegmenter == segmenter[index] ? FontWeight.w600 : FontWeight.w400,
+                                          fontSize: selectedSegmenter == segmenter[index] ? 18 : 16
+                                      ),),
+                                    ),
+                                    SizedBox(height: 3,),
+                                    selectedSegmenter == segmenter[index] ? Container(
+                                      height: 5,
+                                      width: 16,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xff007084),
+                                          borderRadius: BorderRadius.circular(12)
+                                      ),
+                                    ) : Container()
+                                  ],
+                                )
+                            );
+                          }),
+                    ),
+                    Container(
+                      height: 200,
+                      child: ListView.builder(
+                          itemCount: books.length,
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          itemBuilder: (context, index){
+                            return BooksTile(
+                              imgAssetPath: books[index].imgAssetPath,
+                              rating: books[index].rating,
+                              title: books[index].title,
+                              description: books[index].description,
+                              categorie: books[index].categorie,
+                            );
+                          }),
+                    ),
+                
                   ],
                 ),
               )

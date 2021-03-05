@@ -17,17 +17,24 @@ class SideBar extends StatefulWidget {
   @override
   _SideBarState createState() => _SideBarState();
 }
+
 final List<Entry> data = <Entry>[
   Entry(
-    'Publications',Icons.padding,
+    'Publications',
+    Icons.padding,
     <Entry>[
-      Entry('Newspaper',null,),
-      Entry('Magazine',null),
-      Entry('Books',null),
+      Entry(
+        'Newspaper',
+        null,
+      ),
+      Entry('Magazine', null),
+      Entry('Books', null),
     ],
   ),
 ];
-class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<SideBar> {
+
+class _SideBarState extends State<SideBar>
+    with SingleTickerProviderStateMixin<SideBar> {
   SharedPref sharedPref = SharedPref();
   UserData userData;
   bool logged;
@@ -37,24 +44,24 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
   var isSidebarOpenedStream;
   StreamSink<bool> isSidebarOpenedSink;
   final _animationDuration = const Duration(milliseconds: 500);
-  checkIfAuthenticated() async {  // could be a long running task, like a fetch from keychain
+  checkIfAuthenticated() async {
+    // could be a long running task, like a fetch from keychain
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLogged = prefs.getBool('isLoggedIn') ?? false;
     return isLogged;
   }
+
   @override
   void initState() {
     sharedPref.read("user").then((value) {
       var valueRead;
-      if(value != null)
-        valueRead = jsonDecode(value);
+      if (value != null) valueRead = jsonDecode(value);
       setState(() {
-        if(value != null)
-          userData = UserData.fromJson(valueRead);
+        if (value != null) userData = UserData.fromJson(valueRead);
       });
     });
-    sharedPref.readStr("key").then((value)  {
-      if(value != null){
+    sharedPref.readStr("key").then((value) {
+      if (value != null) {
         if (value == 'light') {
           isSwitched = false;
         } else {
@@ -68,7 +75,8 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
       });
     });
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: _animationDuration);
+    _animationController =
+        AnimationController(vsync: this, duration: _animationDuration);
     isSidebarOpenedStreamController = PublishSubject<bool>();
     isSidebarOpenedStream = isSidebarOpenedStreamController.stream;
     isSidebarOpenedSink = isSidebarOpenedStreamController.sink;
@@ -94,20 +102,24 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
       _animationController.forward();
     }
   }
+
   Widget _buildTiles(Entry root) {
     if (root.children.isEmpty) {
       return ListTile(
         onTap: () {
           onIconPressed();
-          switch(root.title){
+          switch (root.title) {
             case "Magazine":
-              bl.BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.MagazineListClickEvent);
+              bl.BlocProvider.of<NavigationBloc>(context)
+                  .add(NavigationEvents.MagazineListClickEvent);
               break;
             case "Books":
-              bl.BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.BooksListClickEvent);
+              bl.BlocProvider.of<NavigationBloc>(context)
+                  .add(NavigationEvents.BooksListClickEvent);
               break;
             case "Newspaper":
-              bl.BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.NewspapersListClickEvent);
+              bl.BlocProvider.of<NavigationBloc>(context)
+                  .add(NavigationEvents.NewspapersListClickEvent);
               break;
           }
         },
@@ -118,7 +130,10 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
             ),
             Text(
               root.title,
-              style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18, color: Colors.white),
+              style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 18,
+                  color: Colors.white),
             )
           ],
         ),
@@ -138,7 +153,8 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
           ),
           Text(
             root.title,
-            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18, color: Colors.white),
+            style: TextStyle(
+                fontWeight: FontWeight.w300, fontSize: 18, color: Colors.white),
           )
         ],
       ),
@@ -161,7 +177,7 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                 duration: _animationDuration,
                 top: 0,
                 bottom: 0,
-                left: isSideBarOpenedAsync.data ? 0 : - screenWidth * 0.63,
+                left: isSideBarOpenedAsync.data ? 0 : -screenWidth * 0.63,
                 right: isSideBarOpenedAsync.data ? 0 : screenWidth - 40,
                 child: Row(
                   children: <Widget>[
@@ -169,54 +185,63 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                       width: screenWidth * 0.65,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        color: Theme.of(context).primaryColor,
+                        // color: Theme.of(context).primaryColor,
                         child: Column(
                           children: <Widget>[
                             SizedBox(
                               height: 20,
                             ),
-                            logged != null ?
-                            logged ?
-                            ListTile(
-                              title: Text(
-                                "Prateek",
-                                style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
-                              ),
-                              subtitle: Text(
-                                "test@email.com",
-                                style: TextStyle(
-                                  color: Color(0xFF1BB5FD),
-                                  fontSize: 14,
-                                ),
-                              ),
-                              leading: CircleAvatar(
-                                child: Icon(
-                                  Icons.perm_identity,
-                                  color: Colors.white,
-                                ),
-                                radius: 40,
-                              ),
-                            ) : ListTile(
-                              title: Text(
-                                "Guest",
-                                style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w800),
-                              ),
-                              subtitle: Text(
-                                "Profile",
-                                style: TextStyle(
-                                  color: Color(0xFF1BB5FD),
-                                  fontSize: 14,
-                                ),
-                              ),
-                              leading: CircleAvatar(
-                                child: Icon(
-                                  Icons.perm_identity,
-                                  color: Colors.white,
-                                ),
-                                radius: 40,
-                              ),
-                            )
-                                : Center(child: CircularProgressIndicator(),),
+                            logged != null
+                                ? logged
+                                    ? ListTile(
+                                        title: Text(
+                                          "Prateek",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                        subtitle: Text(
+                                          "test@email.com",
+                                          style: TextStyle(
+                                            color: Color(0xFF1BB5FD),
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        leading: CircleAvatar(
+                                          child: Icon(
+                                            Icons.perm_identity,
+                                            color: Colors.white,
+                                          ),
+                                          radius: 40,
+                                        ),
+                                      )
+                                    : ListTile(
+                                        title: Text(
+                                          "Guest",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                        subtitle: Text(
+                                          "Profile",
+                                          style: TextStyle(
+                                            color: Color(0xFF1BB5FD),
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        leading: CircleAvatar(
+                                          child: Icon(
+                                            Icons.perm_identity,
+                                            color: Colors.white,
+                                          ),
+                                          radius: 40,
+                                        ),
+                                      )
+                                : Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
                             Divider(
                               height: 24,
                               thickness: 0.5,
@@ -232,7 +257,10 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                                     title: "Home",
                                     onTap: () {
                                       onIconPressed();
-                                      bl.BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.HomePageClickedEvent);
+                                      bl.BlocProvider.of<NavigationBloc>(
+                                              context)
+                                          .add(NavigationEvents
+                                              .HomePageClickedEvent);
                                     },
                                   ),
                                   MenuItem(
@@ -243,7 +271,7 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                                       // bl.BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.AuthorPageClickedEvent);
                                     },
                                   ),
-                                  for(var da in data)
+                                  for (var da in data)
                                     ExpansionTile(
                                       key: PageStorageKey<Entry>(da),
                                       title: Row(
@@ -258,11 +286,16 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                                           ),
                                           Text(
                                             da.title,
-                                            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18, color: Colors.white),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 18,
+                                                color: Colors.white),
                                           )
                                         ],
                                       ),
-                                      children: da.children.map<Widget>(_buildTiles).toList(),
+                                      children: da.children
+                                          .map<Widget>(_buildTiles)
+                                          .toList(),
                                     ),
                                   MenuItem(
                                     icon: Icons.card_giftcard,
@@ -292,13 +325,14 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                                           onChanged: (value) {
                                             setState(() {
                                               isSwitched = value;
-                                              if(value)
+                                              if (value)
                                                 widget.theme.setDarkMode();
                                               else
                                                 widget.theme.setLightMode();
                                             });
                                           },
-                                          activeTrackColor: Colors.lightGreenAccent,
+                                          activeTrackColor:
+                                              Colors.lightGreenAccent,
                                           activeColor: Colors.green,
                                         ),
                                         SizedBox(
@@ -306,7 +340,10 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                                         ),
                                         Text(
                                           "Dark mode",
-                                          style: TextStyle(fontWeight: FontWeight.w300, fontSize: 18, color: Colors.white),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 18,
+                                              color: Colors.white),
                                         )
                                       ],
                                     ),
@@ -319,7 +356,7 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                       ),
                     ),
                     Align(
-                      alignment: Alignment(0,-1.0),
+                      alignment: Alignment(0, -1.0),
                       child: GestureDetector(
                         onTap: () {
                           onIconPressed();
@@ -329,7 +366,7 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                           child: Container(
                             width: 28,
                             height: 87,
-                            color: Theme.of(context).primaryColor,
+                            // color: Theme.of(context).primaryColor,
                             alignment: Alignment.centerLeft,
                             child: AnimatedIcon(
                               progress: _animationController.view,
@@ -377,10 +414,10 @@ class CustomMenuClipper extends CustomClipper<Path> {
   }
 }
 
-
 class Entry {
   final String title;
-  final List<Entry>  children;
-  final IconData icon; // Since this is an expansion list ...children can be another list of entries
-  Entry(this.title, this.icon,[this.children = const <Entry>[]]);
+  final List<Entry> children;
+  final IconData
+      icon; // Since this is an expansion list ...children can be another list of entries
+  Entry(this.title, this.icon, [this.children = const <Entry>[]]);
 }

@@ -8,12 +8,12 @@ import 'package:easy_shelf/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MainAppPage extends StatefulWidget with NavigationStates{
+class MainAppPage extends StatefulWidget with NavigationStates {
   final int page;
 
   MainAppPage({@required this.page});
   @override
-  _MainAppPageState createState() => _MainAppPageState(page : this.page);
+  _MainAppPageState createState() => _MainAppPageState(page: this.page);
 }
 
 class _MainAppPageState extends State<MainAppPage> {
@@ -28,14 +28,15 @@ class _MainAppPageState extends State<MainAppPage> {
   Widget _showPage;
   GlobalKey _bottomNavigationKey = GlobalKey();
 
-  checkIfAuthenticated() async {  // could be a long running task, like a fetch from keychain
+  checkIfAuthenticated() async {
+    // could be a long running task, like a fetch from keychain
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLogged = prefs.getBool('isLoggedIn') ?? false;
     return isLogged;
   }
 
-  Widget _selectPage(int page){
-    switch(page){
+  Widget _selectPage(int page) {
+    switch (page) {
       case 0:
         return homePage;
         break;
@@ -51,9 +52,8 @@ class _MainAppPageState extends State<MainAppPage> {
   }
 
   @override
-  void initState(){
-
-    switch(page){
+  void initState() {
+    switch (page) {
       case 0:
         _showPage = MyHomePage();
         break;
@@ -82,13 +82,25 @@ class _MainAppPageState extends State<MainAppPage> {
         index: page,
         height: 50.0,
         items: <Widget>[
-          Icon(Icons.home, size: 30,color: Colors.white,),
-          Icon(Icons.explore, size: 30,color: Colors.white,),
-          Icon(Icons.account_circle, size: 30,color: Colors.white,),
+          Icon(
+            Icons.home,
+            size: 30,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.explore,
+            size: 30,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.account_circle,
+            size: 30,
+            color: Colors.white,
+          ),
         ],
-        color: Theme.of(context).primaryColor,
-        buttonBackgroundColor: Color.fromRGBO(44, 140, 135, 1.0),
-        backgroundColor: Theme.of(context).primaryColor,
+        color: Color(0xFF1EB998),
+        buttonBackgroundColor: Color(0xFF1EB998),
+        backgroundColor: Color(0xFF1EB998),
         animationCurve: Curves.decelerate,
         animationDuration: Duration(milliseconds: 600),
         onTap: (tappedIndex) {

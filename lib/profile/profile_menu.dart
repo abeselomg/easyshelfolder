@@ -18,144 +18,144 @@ class ProfileMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(builder: (context) => AccountPage()));
-                    },
-                    child: Container(
-                      height: deviceSize.height * 0.14,
-                      width: deviceSize.width * 0.45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Color.fromRGBO(44, 141,121,1),width: 1,style: BorderStyle.solid),
-                        borderRadius: BorderRadius.circular(
-                          10.0,
-                        ),
-                      ),
-                      child:  Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: profile_info_background,
-                              ),
-                              child: Icon(
-                                Icons.account_balance_wallet,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Container(
-                              width: deviceSize.width * 0.27,
-                              margin: EdgeInsets.only(left: 15.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Bank Account',
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Link Your Accounts',
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: profile_item_color,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                    },
-                    child: Container(
-                      height: deviceSize.height * 0.14,
-                      width: deviceSize.width * 0.45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Color.fromRGBO(44, 141,121,1),width: 1,style: BorderStyle.solid),
-                        borderRadius: BorderRadius.circular(
-                          10.0,
-                        ),
-                      ),
-                      child:  Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: profile_info_background,
-                              ),
-                              child: Icon(
-                                Icons.credit_card_outlined,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 15.0),
-                              width: deviceSize.width * 0.25,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Easy Card',
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Manage Your Cards',
-                                    overflow: TextOverflow.clip,
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: profile_item_color,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: <Widget>[
+              //     GestureDetector(
+              //       onTap: () {
+              //         // Navigator.push(
+              //         //     context,
+              //         //     MaterialPageRoute(builder: (context) => AccountPage()));
+              //       },
+              //       child: Container(
+              //         height: deviceSize.height * 0.14,
+              //         width: deviceSize.width * 0.45,
+              //         decoration: BoxDecoration(
+              //           color: Colors.white,
+              //           border: Border.all(color: Color.fromRGBO(44, 141,121,1),width: 1,style: BorderStyle.solid),
+              //           borderRadius: BorderRadius.circular(
+              //             10.0,
+              //           ),
+              //         ),
+              //         child:  Padding(
+              //           padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              //           child: ListView(
+              //             scrollDirection: Axis.horizontal,
+              //             children: <Widget>[
+              //               Container(
+              //                 padding: EdgeInsets.all(8.0),
+              //                 decoration: BoxDecoration(
+              //                   shape: BoxShape.circle,
+              //                   color: profile_info_background,
+              //                 ),
+              //                 child: Icon(
+              //                   Icons.account_balance_wallet,
+              //                   color: Colors.white,
+              //                 ),
+              //               ),
+              //               Container(
+              //                 width: deviceSize.width * 0.27,
+              //                 margin: EdgeInsets.only(left: 15.0),
+              //                 child: Column(
+              //                   mainAxisAlignment: MainAxisAlignment.center,
+              //                   crossAxisAlignment: CrossAxisAlignment.start,
+              //                   children: <Widget>[
+              //                     Text(
+              //                       'Bank Account',
+              //                       style: TextStyle(
+              //                         fontSize: 18.0,
+              //                         color: Colors.black,
+              //                         fontWeight: FontWeight.bold,
+              //                       ),
+              //                     ),
+              //                     SizedBox(
+              //                       height: 10,
+              //                     ),
+              //                     Text(
+              //                       'Link Your Accounts',
+              //                       style: TextStyle(
+              //                         fontSize: 14.0,
+              //                         color: profile_item_color,
+              //                         fontWeight: FontWeight.bold,
+              //                       ),
+              //                     ),
+              //                   ],
+              //                 ),
+              //               )
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //     GestureDetector(
+              //       onTap: () {
+              //       },
+              //       child: Container(
+              //         height: deviceSize.height * 0.14,
+              //         width: deviceSize.width * 0.45,
+              //         decoration: BoxDecoration(
+              //           color: Colors.white,
+              //           border: Border.all(color: Color.fromRGBO(44, 141,121,1),width: 1,style: BorderStyle.solid),
+              //           borderRadius: BorderRadius.circular(
+              //             10.0,
+              //           ),
+              //         ),
+              //         child:  Padding(
+              //           padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              //           child: ListView(
+              //             scrollDirection: Axis.horizontal,
+              //             children: <Widget>[
+              //               Container(
+              //                 padding: EdgeInsets.all(8.0),
+              //                 decoration: BoxDecoration(
+              //                   shape: BoxShape.circle,
+              //                   color: profile_info_background,
+              //                 ),
+              //                 child: Icon(
+              //                   Icons.credit_card_outlined,
+              //                   color: Colors.white,
+              //                 ),
+              //               ),
+              //               Container(
+              //                 margin: EdgeInsets.only(left: 15.0),
+              //                 width: deviceSize.width * 0.25,
+              //                 child: Column(
+              //                   mainAxisAlignment: MainAxisAlignment.center,
+              //                   crossAxisAlignment: CrossAxisAlignment.start,
+              //                   children: <Widget>[
+              //                     Text(
+              //                       'Easy Card',
+              //                       style: TextStyle(
+              //                         fontSize: 18.0,
+              //                         color: Colors.black,
+              //                         fontWeight: FontWeight.bold,
+              //                       ),
+              //                     ),
+              //                     SizedBox(
+              //                       height: 10,
+              //                     ),
+              //                     Text(
+              //                       'Manage Your Cards',
+              //                       overflow: TextOverflow.clip,
+              //                       style: TextStyle(
+              //                         fontSize: 14.0,
+              //                         color: profile_item_color,
+              //                         fontWeight: FontWeight.bold,
+              //                       ),
+              //                     ),
+              //                   ],
+              //                 ),
+              //               )
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     )
+              //   ],
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[

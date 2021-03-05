@@ -11,7 +11,7 @@ class ProfileDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     Size deviceSize = MediaQuery.of(context).size;
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Material(
         borderRadius: BorderRadius.all(
           Radius.circular(20.0),
@@ -27,7 +27,7 @@ class ProfileDetail extends StatelessWidget {
             height: deviceSize.height * 0.17,
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             decoration: BoxDecoration(
-              color: profile_info_background,
+              color: Color(0xFF1EB998),
               borderRadius: BorderRadius.all(
                 Radius.circular(20.0),
               ),
@@ -40,8 +40,8 @@ class ProfileDetail extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     ProfileImage(
-                      height: 90.0,
-                      width: 90.0,
+                      height: 70.0,
+                      width: 70.0,
                       picUrl: user != null ? user.profile: "undefined" ,
                     ),
                     SizedBox(

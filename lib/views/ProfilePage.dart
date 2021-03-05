@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:easy_shelf/helpers/UserData.dart';
 import 'package:easy_shelf/helpers/sharedPref.dart';
 import 'package:easy_shelf/profile/profilescreen.dart';
+import 'package:easy_shelf/views/Authentication.dart';
 import 'package:easy_shelf/views/first.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,18 +62,33 @@ class _ProfilePage extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     if(logged != null){
+
+
+
       if(logged){
         return Scaffold(
             body: Container(
               color: Theme.of(context).primaryColor,
               child: Center(
-                child: Profile(user:userData),
+                child: Profile(user:UserData(1,
+          "+251923805630",
+          "abeselom@email.com",
+          "251923805630",
+          "+251",
+          "Ethiopia",
+          "this.password",
+          null,
+          null)),
               ),
             )
         );
       }else{
-        return FirstPage();
+        return LoginPage(1);
       }
+
+
+
+
     }else{
       return Scaffold(
         body: Center(

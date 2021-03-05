@@ -13,11 +13,10 @@ import 'BookView.dart';
 
 class BookList extends StatefulWidget with NavigationStates {
   @override
-  _BookList createState() =>  _BookList();
+  _BookList createState() => _BookList();
 }
 
 class _BookList extends State<BookList> {
-
   List<Category> books;
   List<dynamic> categoriesList;
   List<SelectedCats> selectedCatsList = List();
@@ -30,7 +29,8 @@ class _BookList extends State<BookList> {
           return AlertDialog(
             title: Text("Filter Books"),
             content: MultiSelectChip(
-              categoriesList,selectedCatsList,
+              categoriesList,
+              selectedCatsList,
               onSelectionChanged: (selectedList) {
                 _booksData();
                 setState(() {
@@ -49,25 +49,41 @@ class _BookList extends State<BookList> {
   }
 
   // +added
-  Future _booksData () async {
+  Future _booksData() async {
     String url;
-    if(selectedCatsList.isEmpty){
-      url = urlSt+ '/api/v1/allbooks';
-    }else {
+    if (selectedCatsList.isEmpty) {
+      url = urlSt + '/api/v1/allbooks';
+    } else {
       List<int> selectedList = [];
       selectedCatsList.forEach((element) {
         selectedList.add(element.id);
       });
-      url = urlSt+ '/api/v1/bookfliterbycatagories?catagory_id='+selectedList.join(",");
+      url = urlSt +
+          '/api/v1/bookfliterbycatagories?catagory_id=' +
+          selectedList.join(",");
     }
 
-    Map<String, String> headers = {"Content-type": "application/json","Accept": "application/json","Authorization": authKey};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization": authKey
+    };
     Response response = await get(url, headers: headers);
     int statusCode = response.statusCode;
     List body = jsonDecode(response.body);
     List<Category> mags = [];
     body.forEach((element) {
-      mags.add(Category(element['id'],element['title'], element['type'],element['publisher_id'],element['catagory_id'], urlSt+'storage'+element['cover_image']));
+      mags.add(Category(
+        element['id'],
+        element['title'],
+        element['type'],
+        element['publisher_id'],
+        element['catagory_id'],
+        urlSt + 'storage' + element['cover_image'],
+        element['catagory']['name'],
+        element['publisher']['name'],
+        element['created_at'],
+      ));
     });
     setState(() {
       books = mags;
@@ -76,8 +92,12 @@ class _BookList extends State<BookList> {
   }
 
   Future _categoriesList() async {
-    String url = urlSt+'/api/v1/bookcatagories';
-    Map<String, String> headers = {"Content-type": "application/json","Accept": "application/json","Authorization": authKey};
+    String url = urlSt + '/api/v1/bookcatagories';
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization": authKey
+    };
     Response response = await get(url, headers: headers);
     int statusCode = response.statusCode;
     List body = jsonDecode(response.body);
@@ -85,7 +105,7 @@ class _BookList extends State<BookList> {
   }
 
   @override
-  void initState(){
+  void initState() {
     _booksData();
     _categoriesList().then((value) {
       setState(() {
@@ -94,12 +114,15 @@ class _BookList extends State<BookList> {
     });
     super.initState();
   }
+
   Future<bool> _willPopCallback() async {
     // await showDialog or Show add banners or whatever
     // then
-    bl.BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.HomePageClickedEvent);
+    bl.BlocProvider.of<NavigationBloc>(context)
+        .add(NavigationEvents.HomePageClickedEvent);
     return false; // return true if the route to be popped
   }
+
   @override
   Widget build(BuildContext context) {
     List selectedList = [];
@@ -121,21 +144,22 @@ class _BookList extends State<BookList> {
                 height: 10,
               ),
               Padding(
-                padding: EdgeInsets.only(left: 20,right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    selectedCatsList.isNotEmpty ?
-                    Expanded(
-                      child: ListTile(
-                        title: Text("Showing", style: kTitleTextStyle),
-                        subtitle: Text(selectedList.join(" , "), style: TextStyle(
-                            fontSize: 10
-                        )),
-                      ),
-                    ) : Text("Showing All Categories", style: kTitleTextStyle),
+                    selectedCatsList.isNotEmpty
+                        ? Expanded(
+                            child: ListTile(
+                              title: Text("Showing", style: kTitleTextStyle),
+                              subtitle: Text(selectedList.join(" , "),
+                                  style: TextStyle(fontSize: 10)),
+                            ),
+                          )
+                        : Text("Showing All Categories",
+                            style: kTitleTextStyle),
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         _showReportDialog();
                       },
                       child: Text(
@@ -149,64 +173,71 @@ class _BookList extends State<BookList> {
               SizedBox(
                 height: 10,
               ),
-              books != null ?
-              Expanded(
-                child: StaggeredGridView.countBuilder(
-                  padding: EdgeInsets.all(20),
-                  crossAxisCount: 2,
-                  itemCount: books.length,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => BookDetails(books[index])));
-                      },
-                      child: Column(
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(20),
-                              height: index.isEven ? 200 : 240,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                image: DecorationImage(
-                                  image: NetworkImage(books[index].image),
-                                  fit: BoxFit.fill,
+              books != null
+                  ? Expanded(
+                      child: StaggeredGridView.countBuilder(
+                        padding: EdgeInsets.all(20),
+                        crossAxisCount: 2,
+                        itemCount: books.length,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BookDetails(books[index])));
+                            },
+                            child: Column(children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(20),
+                                height: index.isEven ? 200 : 240,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  image: DecorationImage(
+                                    image: NetworkImage(books[index].image),
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 18,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  books[index].name,
-                                  style: kTitleTextStyle,
-                                ),
-                                Text(
-                                  'Type: ${books[index].price}',
-                                  style: TextStyle(
-                                    color: kTextColor.withOpacity(.5),
+                              SizedBox(
+                                height: 18,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    books[index].name,
+                                    style: kTitleTextStyle,
                                   ),
-                                )
-                              ],
-                            ),
-                          ]
+                                  Text(
+                                    'Type: ${books[index].price}',
+                                    style: TextStyle(
+                                      color: kTextColor.withOpacity(.5),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ]),
+                          );
+                        },
+                        staggeredTileBuilder: (index) => StaggeredTile.fit(1),
                       ),
-                    );
-                  },
-                  staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                ),
-              ) : Container(height: MediaQuery.of(context).size.height * 0.7,child: Center(child: CircularProgressIndicator(),),),
+                    )
+                  : Container(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
             ],
           ),
         ),
       ),
     );
   }
-
 }
 
 class MultiSelectChip extends StatefulWidget {
@@ -214,7 +245,8 @@ class MultiSelectChip extends StatefulWidget {
   final List<SelectedCats> prevSelected;
   final Function(List<dynamic>) onSelectionChanged;
 
-  MultiSelectChip(this.categoriesList, this.prevSelected,{this.onSelectionChanged});
+  MultiSelectChip(this.categoriesList, this.prevSelected,
+      {this.onSelectionChanged});
 
   @override
   _MultiSelectChipState createState() => _MultiSelectChipState();
@@ -230,10 +262,9 @@ class SelectedCats {
       : id = json['id'],
         name = json['name'];
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'id': id,
-        'name' : name,
+        'name': name,
       };
 }
 
@@ -245,23 +276,26 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
     List<Widget> choices = List();
     selectedChoices = widget.prevSelected;
     widget.categoriesList.forEach((item) {
-      choices.add(
-          Container(
-            padding: const EdgeInsets.all(2.0),
-            child: ChoiceChip(
-              label: Text(item["name"]),
-              selected: selectedChoices.where((element) => element.name == item["name"]).isNotEmpty,
-              onSelected: (selected) {
-                setState(() {
-                  selectedChoices.where((element) => element.name == item["name"]).isNotEmpty
-                      ? selectedChoices.removeWhere((element) => element.name == item["name"])
-                      : selectedChoices.add(SelectedCats(item["id"],item["name"]));
-                  widget.onSelectionChanged(selectedChoices);
-                });
-              },
-            ),
-          )
-      );
+      choices.add(Container(
+        padding: const EdgeInsets.all(2.0),
+        child: ChoiceChip(
+          label: Text(item["name"]),
+          selected: selectedChoices
+              .where((element) => element.name == item["name"])
+              .isNotEmpty,
+          onSelected: (selected) {
+            setState(() {
+              selectedChoices
+                      .where((element) => element.name == item["name"])
+                      .isNotEmpty
+                  ? selectedChoices
+                      .removeWhere((element) => element.name == item["name"])
+                  : selectedChoices.add(SelectedCats(item["id"], item["name"]));
+              widget.onSelectionChanged(selectedChoices);
+            });
+          },
+        ),
+      ));
     });
 
     return choices;

@@ -26,6 +26,7 @@ dependencies:
 
   curved_navigation_bar: ^0.3.2
   custom_splash: ^0.0.2
+  persistent_bottom_nav_bar: any
   firebase_core: ^0.5.0
   firebase_auth: ^0.18.0+1
   cloud_firestore: ^0.14.0+2
@@ -45,8 +46,11 @@ dependencies:
   rflutter_alert: ^1.1.0
   mask_text_input_formatter: ^1.1.0
   provider: ^4.3.2+3
+  advance_pdf_viewer: ^1.2.2
+  flutter_cached_pdfview: ^0.3.5
+  sms: ^0.2.0
   # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+
   cupertino_icons: ^1.0.0
   cached_network_image: ^2.2.0+1
   flutter_svg: ^0.19.1
