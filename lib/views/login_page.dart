@@ -113,7 +113,7 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
           builder: (BuildContext context) => Profile(
               activeBalance: value['active_balance'],
               pendingBalance: value['pending_balance'],
-              balance: value['user']['wallet']['balance'],
+              balance: value['active_balance'],
               user: UserData(
                   1,
                   "+251923805630",
