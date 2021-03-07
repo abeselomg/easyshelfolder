@@ -75,40 +75,58 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
     return Image.asset("assets/images/shelf.png",
         width: 130, height: 130, gaplessPlayback: false, fit: BoxFit.fill);
   }
-  userBalance(){
-// loading
-//               ? Container(
-//                   child: CircularProgressIndicator(
-//                   backgroundColor: Colors.black54,
-//                 ))
-//               : 
-              
-              authAPI.getUserBalance().then((value) {
-                  print(value);
-                  if (value!=null) {
-                                 setState(() {
-                    loading = false;
-                  });
-          
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => Profile(
-                        user: UserData(
-                            1,
-                            "+251923805630",
-                            "abeselom@email.com",
-                            "251923805630",
-                            "+251",
-                            "Ethiopia",
-                            "this.password",
-                            null,
-                            null)),
-                  ));
-                  } else {
-                    
-                  }
-     
 
-                });
+  userBalance() {
+    loading
+        ? Container(
+            child: CircularProgressIndicator(
+            backgroundColor: Colors.black54,
+          ))
+        : Container();
+
+    authAPI.getUserBalance().then((value) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('balance', value['user']['wallet']['balance']);
+      prefs.setString('activebalance', value['user']['wallet']['balance']);
+      prefs.setString('pendingbalance', value['user']['wallet']['balance']);
+      var profilevalue = prefs.getBool("completeprofile");
+
+      profilevalue == false
+          ? Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ProfileFormPage(0, value['user']['wallet']['balance'])))
+          :
+
+          // String uid = prefs.getString('uid');
+          print(value);
+      print(value['user']['wallet']['balance']);
+
+      print(value['active_balance']);
+      print(value['pending_balance']);
+
+      if (value != null) {
+        setState(() {
+          loading = false;
+        });
+
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (BuildContext context) => Profile(
+              activeBalance: value['active_balance'],
+              pendingBalance: value['pending_balance'],
+              balance: value['user']['wallet']['balance'],
+              user: UserData(
+                  1,
+                  "+251923805630",
+                  "abeselom@email.com",
+                  "251923805630",
+                  "+251",
+                  "Ethiopia",
+                  "this.password",
+                  null,
+                  null)),
+        ));
+      } else {}
+    });
   }
 
   checkUserSignedIn() async {
@@ -117,12 +135,7 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
     String uid = prefs.getString('uid');
 
     if (token != null) {
-      var profilevalue = prefs.getBool("completeprofile");
-
-      profilevalue == true
-          ? userBalance()
-          : Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) => ProfileFormPage(0)));
+      userBalance();
     } else {
       receiver.onSmsReceived.listen((SmsMessage msg) {
         print("msgmsgmsgmsgmsgmsgmsgmsgmsgmsg ${msg.toMap}");
@@ -473,9 +486,7 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
           await authAPI.getUser().then((value) {
             print("****************user data**************");
             print(value);
-            var router = MaterialPageRoute(
-                builder: (BuildContext context) => ProfileFormPage(0));
-            Navigator.of(context).pushReplacement(router);
+            userBalance();
           });
         } else {
           setState(() {

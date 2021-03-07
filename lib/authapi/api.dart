@@ -223,6 +223,46 @@ class AuthAPI {
     }
   }
 
+  
+
+  Future getBanks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    String uid = prefs.getString('uid');
+
+    Map<String, String> headers = {
+      "Accept": "application/json",
+      'Authorization': "Bearer $token",
+    };
+
+    try {
+      http.Response response = await http.get(
+          Uri.encodeFull(payUrl + "/api/v1/users/get/deposit/banks?sub=$uid"),
+          headers: headers);
+      print(
+          "************************************getBanks statusCode ${response.statusCode}*********************************");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var userdata = json.decode(response.body);
+        print(userdata);
+        // _userMap = new User.map(userdata);
+        // prefs.setString("uid", userdata['id']).then((value) {
+        //   print(value);
+        //   print(prefs.getString('uid'));
+        // });
+
+        return userdata;
+      } else {
+        print("User get from api returned null");
+        return null;
+      }
+    } catch (Exception, s) {
+      print("Error API getUser : ${Exception.toString()}");
+      return null;
+    }
+  }
+
+ 
+  
   Future<int> putUser({Map body}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');

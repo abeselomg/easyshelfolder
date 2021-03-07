@@ -1,18 +1,68 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:async/async.dart';
+// import 'dart:io';
 import 'package:easy_shelf/helpers/TitleHead.dart';
 import 'package:easy_shelf/helpers/UserData.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_categories.dart';
 import 'profile_detail.dart';
 import 'profile_menu.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'listOfBanks.dart';
+import 'package:easy_shelf/views/Topup.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   final UserData user;
+  final String balance;
   final String activeBalance;
   final String pendingBalance;
-  Profile({@required this.user,this.activeBalance,this.pendingBalance});
+
+  Profile(
+      {@required this.user,
+      this.activeBalance,
+      this.balance,
+      this.pendingBalance});
 
   @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  @override
   Widget build(BuildContext context) {
+    bool acba = false;
+    bool pendba = false;
+    bool bal = true;
+    dynamic balanceText = 'Balance';
+    File _image;
+    final picker = ImagePicker();
+    Future getImage() async {
+      final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        print("Success");
+        print(_image);
+        var base64Image = base64Encode(_image.readAsBytesSync());
+        print(base64Image);
+      } else {
+        print('No image selected.');
+      }
+
+      await sendImage(pickedFile);
+    }
+
+    setter() {
+      setState(() {
+        balanceText = "result";
+        acba = true;
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -22,15 +72,16 @@ class Profile extends StatelessWidget {
           PopupMenuButton<dynamic>(
             onSelected: (dynamic result) {
               print(result);
+              setter();
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<dynamic>>[
               const PopupMenuItem<dynamic>(
-                value: "a",
-                child: Text('Send Money'),
+                value: "Active Balance",
+                child: Text('Active Balance'),
               ),
               const PopupMenuItem<dynamic>(
-                value: "b",
-                child: Text('Withdraw'),
+                value: "Pending Balance",
+                child: Text('Pending Balance'),
               ),
               const PopupMenuItem<dynamic>(
                 value: "c",
@@ -60,7 +111,7 @@ class Profile extends StatelessWidget {
                     //   height: 20.0,
                     // ),
                     ProfileDetail(
-                      user: user,
+                      user: widget.user,
                     ),
                     SizedBox(
                       height: 15.0,
@@ -83,7 +134,7 @@ class Profile extends StatelessWidget {
                             ),
 
                             padding: EdgeInsets.all(15),
-                            height: MediaQuery.of(context).size.height * 0.35,
+                            height: MediaQuery.of(context).size.height * 0.3,
                             //  decoration: BoxDecoration(),
                             child: Column(
                               children: [
@@ -92,7 +143,7 @@ class Profile extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "Active balance",
+                                      'Balance',
                                       style: TextStyle(
                                           fontFamily: 'AirbnbCerealBold',
                                           fontSize: 18,
@@ -104,7 +155,13 @@ class Profile extends StatelessWidget {
                                         Icons.add_box_outlined,
                                         size: 30,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        Topup()));
+                                      },
                                     )
                                   ],
                                 ),
@@ -136,7 +193,7 @@ class Profile extends StatelessWidget {
                                     ),
                                     Text(
                                       // balance != null ? balance.toStringAsFixed(2)+" Br" : '0.00'+" Br",
-                                      "1100.00 Br",
+                                      "${widget.balance} Br",
                                       style: TextStyle(
                                           fontFamily: 'AirbnbCerealBold',
                                           fontSize: 25,
@@ -151,9 +208,7 @@ class Profile extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
+
                                 // ClipRRect(
                                 //   borderRadius: BorderRadius.circular(20),
                                 //   child: RaisedButton(
@@ -183,7 +238,7 @@ class Profile extends StatelessWidget {
                     ),
 
                     ProfileMenu(
-                      user,
+                      widget.user,
                     ),
                   ],
                 ),
@@ -193,5 +248,50 @@ class Profile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future sendImage(PickedFile pickedFile) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    String uid = prefs.getString('uid');
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(pickedFile.openRead()));
+    // get file length
+    var length = 1; //imageFile is your image file
+    Map<String, String> headers = {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + token
+    }; // ignore this headers if there is no authentication
+
+    // string to uri
+    var uri = Uri.parse("easypayet.xyz/api/v1/users/deposit");
+
+    // create multipart request
+    var request = new http.MultipartRequest("POST", uri);
+
+    // multipart that takes file
+    var multipartFileSign = new http.MultipartFile('screenshot', stream, length,
+        filename: basename(pickedFile.path));
+
+    // add file to multipart
+    request.files.add(multipartFileSign);
+
+    //add headers
+    request.headers.addAll(headers);
+
+    //adding params
+    request.fields['amount'] = '12';
+    request.fields['deposit_account'] = 'abc';
+    request.fields['sub'] = uid;
+
+    // send
+    var response = await request.send();
+
+    print(response.statusCode);
+
+    // listen for response
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
   }
 }
