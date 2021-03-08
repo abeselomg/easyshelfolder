@@ -1,5 +1,9 @@
+import 'package:easy_shelf/helpers/UserData.dart';
+import 'package:easy_shelf/profile/profilescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_shelf/profile/listOfBanks.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
+
 class Topup extends StatefulWidget {
   @override
   _TopupState createState() => _TopupState();
@@ -7,10 +11,29 @@ class Topup extends StatefulWidget {
 
 class _TopupState extends State<Topup> {
   @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    print("BACK BUTTON!");
+    Navigator.of(context).pop();
+    // Do some stuff.
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/images/logo.png'),
+        // title: Image.asset('assets/images/logo.png'),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
@@ -20,11 +43,8 @@ class _TopupState extends State<Topup> {
           children: <Widget>[
             Text(
               'Top-up Balance',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 17
-              ),
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            ),
             SizedBox(height: 64),
             Container(
               alignment: Alignment.center,
@@ -33,21 +53,16 @@ class _TopupState extends State<Topup> {
               color: Colors.green,
               child: Text(
                 'Local',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 17
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
-                ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 InkWell(
                   onTap: () {
-                   Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                BankList()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => BankList()));
                   },
                   child: Card(
                     elevation: 5,
@@ -71,10 +86,8 @@ class _TopupState extends State<Topup> {
                 ),
                 InkWell(
                   onTap: () {
-                          Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                BankList()));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //     builder: (BuildContext context) => BankList()));
                   },
                   child: Card(
                     elevation: 5,
@@ -83,7 +96,7 @@ class _TopupState extends State<Topup> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                            Icon(Icons.wallet_giftcard),
+                          Icon(Icons.wallet_giftcard),
                           // Image.asset(
                           //   'assets/images/nog.png',
                           //   height: MediaQuery.of(context).size.width*.3,
@@ -104,21 +117,16 @@ class _TopupState extends State<Topup> {
               color: Colors.green,
               child: Text(
                 'International',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 17
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
-                ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 InkWell(
                   onTap: () {
-                          Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                BankList()));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //     builder: (BuildContext context) => BankList()));
                   },
                   child: Card(
                     elevation: 5,
@@ -128,7 +136,7 @@ class _TopupState extends State<Topup> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                           Icon(Icons.payment),
+                          Icon(Icons.payment),
                           // Image.asset(
                           //   'assets/images/nog.png',
                           //   height: MediaQuery.of(context).size.width*.3,
@@ -142,10 +150,8 @@ class _TopupState extends State<Topup> {
                 ),
                 InkWell(
                   onTap: () {
-                          Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                BankList()));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //     builder: (BuildContext context) => BankList()));
                   },
                   child: Card(
                     elevation: 5,
@@ -154,7 +160,7 @@ class _TopupState extends State<Topup> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                            Icon(Icons.credit_card),
+                          Icon(Icons.credit_card),
                           // Image.asset(
                           //   'assets/images/nog.png',
                           //   height: MediaQuery.of(context).size.width*.3,

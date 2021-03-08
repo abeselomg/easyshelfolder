@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:easy_shelf/helpers/ThemeManager.dart';
 import 'package:easy_shelf/helpers/UserData.dart';
 import 'package:easy_shelf/profile/profileform.dart';
+import 'package:easy_shelf/profile/profilescreen.dart';
 import 'package:easy_shelf/sidebar/sidebar_layout.dart';
 import 'package:custom_splash/custom_splash.dart';
 import 'package:easy_shelf/views/Authentication.dart';
@@ -115,14 +116,29 @@ class _MyHomePageState extends State<MyAppPage> {
 
     _controller = PersistentTabController(initialIndex: 0);
 
-
     List<Widget> _buildScreens() {
-      return [MyHomePage(), AuthorProfile(),
-      //  ProfilePage(),
-       LoginPageOtp()
-      //  LoginPage(1)
-      // ProfileFormPage()
-       ];
+      return [
+        MyHomePage(), AuthorProfile(),
+        // AuthorProfile(),
+        //  Profile(
+        //       // activeBalance: value['active_balance'],
+        //       // pendingBalance: value['pending_balance'],
+        //       // balance: value['active_balance'],
+        //       balance: '1565',
+        //       user: UserData(
+        //           1,
+        //           "+251923805630",
+        //           "abeselom@email.com",
+        //           "251923805630",
+        //           "+251",
+        //           "Ethiopia",
+        //           "this.password",
+        //           null,
+        //           null))
+        LoginPageOtp()
+        //  LoginPage(1)
+        // ProfileFormPage()
+      ];
     }
 
     List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -181,6 +197,25 @@ class _MyHomePageState extends State<MyAppPage> {
       ),
       navBarStyle:
           NavBarStyle.style3, // Choose the nav bar style with this property.
+    
+       onWillPop: () async {
+          await showDialog(
+            context: context,
+            useSafeArea: true,
+            builder: (context) => Container(
+              height: 50.0,
+              width: 50.0,
+              color: Colors.white,
+              child: RaisedButton(
+                child: Text("Close"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          );
+          return false;
+        },
     );
 
     // ChangeNotifierProvider<ThemeNotifier>(

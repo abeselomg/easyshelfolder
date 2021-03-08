@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:async/async.dart';
-// import 'dart:io';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:easy_shelf/views/login_page.dart';
 import 'package:easy_shelf/helpers/TitleHead.dart';
 import 'package:easy_shelf/helpers/UserData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,19 +71,25 @@ class _ProfileState extends State<Profile> {
         backgroundColor: Colors.white,
         actions: [
           PopupMenuButton<dynamic>(
-            onSelected: (dynamic result) {
+            onSelected: (dynamic result) async{
               print(result);
               setter();
+              if (result=='c') {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('token', null);
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) =>LoginPageOtp()));
+              }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<dynamic>>[
-              const PopupMenuItem<dynamic>(
-                value: "Active Balance",
-                child: Text('Active Balance'),
-              ),
-              const PopupMenuItem<dynamic>(
-                value: "Pending Balance",
-                child: Text('Pending Balance'),
-              ),
+              // const PopupMenuItem<dynamic>(
+              //   value: "Active Balance",
+              //   child: Text('Active Balance'),
+              // ),
+              // const PopupMenuItem<dynamic>(
+              //   value: "Pending Balance",
+              //   child: Text('Pending Balance'),
+              // ),
               const PopupMenuItem<dynamic>(
                 value: "c",
                 child: Text('Logout'),
@@ -156,6 +163,7 @@ class _ProfileState extends State<Profile> {
                                         size: 30,
                                       ),
                                       onPressed: () {
+    //                          
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder:

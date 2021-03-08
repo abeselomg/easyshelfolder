@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     defaultList = magazinesList;
     // _latestData();
-    _booksData();
+    // _booksData();
     _newspaperData();
     _magazineData();
     books = getBooks();

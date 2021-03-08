@@ -329,7 +329,8 @@ class _MagDetails extends State<MagAndNewsDetails> {
                             ),
                             Center(
                               child: Text(
-                                widget.magazine.publisher_name,
+                                // widget.magazine.publisher_name,
+                                'pub',
                                 style: TextStyle(
                                     color: Colors.black87,
                                     fontWeight: FontWeight.w200,
