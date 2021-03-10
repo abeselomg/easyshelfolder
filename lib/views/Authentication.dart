@@ -77,7 +77,7 @@ class _LoginPage extends State<LoginPage> {
     String formattedDate = formatter.format(now);
     String formattedTime = timeFormatter.format(now);
       Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (BuildContext context) => ProfileFormPage(0,'100'
+      context, MaterialPageRoute(builder: (BuildContext context) => ProfileFormPage(0,'100','100','100'
            )));
 
                 sharedPref.setLoggedIn('logged',true);

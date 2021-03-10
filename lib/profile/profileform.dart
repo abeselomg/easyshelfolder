@@ -37,17 +37,21 @@ class FormData {
 class ProfileFormPage extends StatefulWidget with NavigationStates {
   final int type;
   final String balance;
-  ProfileFormPage(this.type,this.balance);
+  final String activebalance;
+  final String pendingbalance;
+
+  ProfileFormPage(this.type,this.balance,this.activebalance,this.pendingbalance);
   @override
-  _ProfileFormPage createState() => _ProfileFormPage(this.type,this.balance);
+  _ProfileFormPage createState() => _ProfileFormPage(this.type,this.balance,this.activebalance,this.pendingbalance);
 }
 
 class _ProfileFormPage extends State<ProfileFormPage> {
   final int type;
   final String balance;
+  final String activebalance;
+  final String pendingbalance;
 
-
-  _ProfileFormPage(this.type,this.balance);
+  _ProfileFormPage(this.type,this.balance,this.activebalance,this.pendingbalance);
   var loggedIn = false;
   Constants constants = Constants();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
@@ -371,7 +375,7 @@ class _ProfileFormPage extends State<ProfileFormPage> {
             progressDialog.hide();
 
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => Profile(balance: balance,
+                builder: (BuildContext context) => Profile(balance: balance,activeBalance: activebalance,pendingBalance: pendingbalance,
                     user: UserData(
                       
                         1,

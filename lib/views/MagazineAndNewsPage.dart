@@ -324,19 +324,19 @@ class _MagDetails extends State<MagAndNewsDetails> {
                                     fontSize: 18),
                               ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: Text(
-                                // widget.magazine.publisher_name,
-                                'pub',
-                                style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w200,
-                                    fontSize: 18),
-                              ),
-                            ),
+                            // SizedBox(
+                            //   height: 10,
+                            // ),
+                            // Center(
+                            //   child: Text(
+                            //     // widget.magazine.publisher_name,
+                            //     'pub',
+                            //     style: TextStyle(
+                            //         color: Colors.black87,
+                            //         fontWeight: FontWeight.w200,
+                            //         fontSize: 18),
+                            //   ),
+                            // ),
                             SizedBox(
                               height: 20,
                             ),
@@ -671,19 +671,20 @@ class _MagDetails extends State<MagAndNewsDetails> {
                               ),
                             ),
                           ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 5),
-                      child: Text(
-                        "Similar products",
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Container(
+                    //   padding: EdgeInsets.only(left: 5),
+                    //   child: Text(
+                    //     "Similar products",
+                    //     style: TextStyle(
+                    //         color: Colors.black87,
+                    //         fontSize: 18,
+                    //         fontWeight: FontWeight.w500),
+                    //   ),
+                    // ),
+                    
                     // SizedBox(
                     //   height: 12,
                     // ),

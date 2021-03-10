@@ -174,7 +174,10 @@ class AuthAPI {
         prefs.setString("uid", userdata['id']).then((value) {
           print(value);
           print(prefs.getString('uid'));
+          print(userdata['phoneNumber']);
         });
+        prefs.setString('phone', userdata['phoneNumber']);
+        prefs.setString('username', userdata['username']);
 
         return userdata;
       } else {
@@ -223,8 +226,6 @@ class AuthAPI {
     }
   }
 
-  
-
   Future getBanks() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
@@ -261,8 +262,6 @@ class AuthAPI {
     }
   }
 
- 
-  
   Future<int> putUser({Map body}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');

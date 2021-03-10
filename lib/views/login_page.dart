@@ -83,18 +83,18 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
             backgroundColor: Colors.black54,
           ))
         : Container();
-
-    authAPI.getUserBalance().then((value) async {
+    authAPI.getUser().then((value) => {
+       authAPI.getUserBalance().then((value) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('balance', value['user']['wallet']['balance']);
-      prefs.setString('activebalance', value['user']['wallet']['balance']);
-      prefs.setString('pendingbalance', value['user']['wallet']['balance']);
+      prefs.setString('activebalance', value['active_balance']);
+      prefs.setString('pendingbalance', value['pending_balance']);
       var profilevalue = prefs.getBool("completeprofile");
 
       profilevalue == false
           ? Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) =>
-                  ProfileFormPage(0, value['user']['wallet']['balance'])))
+                  ProfileFormPage(0, value['user']['wallet']['balance'],value['active_balance'],value['pending_balance'])))
           :
 
           // String uid = prefs.getString('uid');
@@ -126,6 +126,7 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
                   null)),
         ));
       } else {}
+    })
     });
   }
 

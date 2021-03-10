@@ -50,7 +50,7 @@ class _TopupState extends State<Topup> {
               alignment: Alignment.center,
               width: double.infinity,
               height: 30,
-              color: Colors.green,
+              color: Color(0xFF1EB998),
               child: Text(
                 'Local',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
@@ -64,22 +64,25 @@ class _TopupState extends State<Topup> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (BuildContext context) => BankList()));
                   },
-                  child: Card(
-                    elevation: 5,
-                    margin: EdgeInsets.all(16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.account_balance),
-                          // Image.asset(
-                          //   'assets/images/nog.png',
-                          //   height: MediaQuery.of(context).size.width*.3,
-                          //   width: MediaQuery.of(context).size.width*.3,
-                          //   ),
-                          Text('Bank Account'),
-                        ],
+                  child: Container(
+                    width: 180,
+                    child: Card(
+                      elevation: 5,
+                      margin: EdgeInsets.all(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.account_balance),
+                            // Image.asset(
+                            //   'assets/images/nog.png',
+                            //   height: MediaQuery.of(context).size.width*.3,
+                            //   width: MediaQuery.of(context).size.width*.3,
+                            //   ),
+                            Text('Bank Account'),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -89,21 +92,25 @@ class _TopupState extends State<Topup> {
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => BankList()));
                   },
-                  child: Card(
-                    elevation: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.wallet_giftcard),
-                          // Image.asset(
-                          //   'assets/images/nog.png',
-                          //   height: MediaQuery.of(context).size.width*.3,
-                          //   width: MediaQuery.of(context).size.width*.3,
-                          //   ),
-                          Text('Wallet Banking'),
-                        ],
+                  child: Container(
+                    width: 180,
+
+                    child: Card(
+                      elevation: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.wallet_giftcard),
+                            // Image.asset(
+                            //   'assets/images/nog.png',
+                            //   height: MediaQuery.of(context).size.width*.3,
+                            //   width: MediaQuery.of(context).size.width*.3,
+                            //   ),
+                            Text('Wallet Banking'),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -114,7 +121,7 @@ class _TopupState extends State<Topup> {
               alignment: Alignment.center,
               width: double.infinity,
               height: 30,
-              color: Colors.green,
+              color: Color(0xFF1EB998),
               child: Text(
                 'International',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
@@ -128,22 +135,26 @@ class _TopupState extends State<Topup> {
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => BankList()));
                   },
-                  child: Card(
-                    elevation: 5,
-                    margin: EdgeInsets.all(16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.payment),
-                          // Image.asset(
-                          //   'assets/images/nog.png',
-                          //   height: MediaQuery.of(context).size.width*.3,
-                          //   width: MediaQuery.of(context).size.width*.3,
-                          //   ),
-                          Text('Pay Pal'),
-                        ],
+                  child: Container(
+                    width: 180,
+
+                    child: Card(
+                      elevation: 5,
+                      margin: EdgeInsets.all(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.payment),
+                            // Image.asset(
+                            //   'assets/images/nog.png',
+                            //   height: MediaQuery.of(context).size.width*.3,
+                            //   width: MediaQuery.of(context).size.width*.3,
+                            //   ),
+                            Text('Pay Pal'),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -153,21 +164,25 @@ class _TopupState extends State<Topup> {
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (BuildContext context) => BankList()));
                   },
-                  child: Card(
-                    elevation: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.credit_card),
-                          // Image.asset(
-                          //   'assets/images/nog.png',
-                          //   height: MediaQuery.of(context).size.width*.3,
-                          //   width: MediaQuery.of(context).size.width*.3,
-                          //   ),
-                          Text('Credit/Debit Card'),
-                        ],
+                  child: Container(
+                    width: 180,
+                    child: Card(
+                      elevation: 5,
+                      
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.credit_card),
+                            // Image.asset(
+                            //   'assets/images/nog.png',
+                            //   height: MediaQuery.of(context).size.width*.3,
+                            //   width: MediaQuery.of(context).size.width*.3,
+                            //   ),
+                            Text('Credit/Debit Card'),
+                          ],
+                        ),
                       ),
                     ),
                   ),

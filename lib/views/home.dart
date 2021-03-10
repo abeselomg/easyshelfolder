@@ -263,9 +263,9 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               // Padding(padding: EdgeInsets.only(left: 25), child: Text("Find a product you want to read", style: kSubheadingextStyle),),
               Container(
-                margin: EdgeInsets.only(left: 25, top: 5),
+                margin: EdgeInsets.only(left: 25, top: 0,right: 35),
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                height: 50,
+                height: 40,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Color(0xFFF5F5F7),
@@ -273,12 +273,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 child: Row(
                   children: <Widget>[
+                    SizedBox(width: 20),
                     SvgPicture.asset("assets/icons/search.svg"),
                     SizedBox(width: 10),
                     Text(
                       "Search for anything",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: Color(0xFFA0A5BD),
                       ),
                     )

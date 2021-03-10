@@ -14,7 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bl;
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'dart:io';
+import 'package:easy_shelf/views/login_page.dart';
 import 'package:async/async.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -67,6 +67,12 @@ class _DepositFormPage extends State<DepositFormPage> {
   var loggedIn = false;
   Constants constants = Constants();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  void showInSnackBar(String value) {
+    scaffoldKey.currentState.showSnackBar(new SnackBar(
+        duration: const Duration(seconds: 2), content: new Text(value)));
+  }
+
   bool _autoValidate = false;
   TextEditingController phoneInputController;
   TextEditingController passInputController;
@@ -87,6 +93,7 @@ class _DepositFormPage extends State<DepositFormPage> {
   final picker = ImagePicker();
   dynamic pickedFile;
   bool butloader = false;
+  String _character = 'Camera';
   @override
   initState() {
     countryCode = '+251';
@@ -112,7 +119,7 @@ class _DepositFormPage extends State<DepositFormPage> {
     //      )));
 
     sharedPref.setLoggedIn('logged', true);
-    // if(this.type == 1){
+// if(this.type == 1){
     //   FormData data = FormData(phoneInputController.text,passInputController.text);
     //   _userLogin(jsonEncode(data))
     //   .then((value) async {
@@ -251,23 +258,26 @@ class _DepositFormPage extends State<DepositFormPage> {
   }
 
   Widget _title() {
-    
-
     return Column(
       children: [
         Image.network("$image",
             width: 130, height: 130, gaplessPlayback: false, fit: BoxFit.fill),
-          SizedBox(height: 20,),
-
-          Text(bankname),
-          SizedBox(height: 5,),
-          Text(account),
-          SizedBox(height: 30,),
-
-          Text(contactname),
-          SizedBox(height: 5,),
-          Text(contactnumber),
-
+        SizedBox(
+          height: 20,
+        ),
+        Text(bankname),
+        SizedBox(
+          height: 5,
+        ),
+        Text(account),
+        SizedBox(
+          height: 30,
+        ),
+        Text(contactname),
+        SizedBox(
+          height: 5,
+        ),
+        Text(contactnumber),
       ],
     );
   }
@@ -434,7 +444,7 @@ class _DepositFormPage extends State<DepositFormPage> {
             print('value');
             print(fnameInputController.text);
             print(pickedFile);
-            await sendImage(pickedFile,context);
+            await sendImage(pickedFile, context);
           }
         },
         child: Container(
@@ -658,8 +668,15 @@ class _DepositFormPage extends State<DepositFormPage> {
   @override
   Widget build(BuildContext context) {
     Future getImage() async {
-      pickedFile = await picker.getImage(
+      // _showFormDialog(context);
+      if (_character=='Camera') {
+         pickedFile = await picker.getImage(
+          source: ImageSource.camera, maxHeight: 500, maxWidth: 500);
+      } else {
+         pickedFile = await picker.getImage(
           source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
+      }
+     
 
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -672,7 +689,78 @@ class _DepositFormPage extends State<DepositFormPage> {
       }
     }
 
+    _showFormDialog(BuildContext context) {
+      return showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (param) {
+            return AlertDialog(
+              actions: <Widget>[
+                StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                  return FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Cancel"));
+                }),
+                StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                  return FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        getImage();
+                      },
+                      child: Text("Select"));
+                })
+              ],
+              content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Column(mainAxisSize: MainAxisSize.min, children: [
+                    ListTile(
+                      title: const Text('Camera'),
+                      leading: Radio(
+                        value: 'Camera',
+                        groupValue: _character,
+                        onChanged: (value) {
+                          setState(() {
+                            _character = value;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Gallery'),
+                      leading: Radio(
+                        value: 'Gallery',
+                        groupValue: _character,
+                        onChanged: (value) {
+                          setState(() {
+                            _character = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ]
+                      // List<Widget>.generate(4, (int index) {
+                      //   return Radio<int>(
+                      //     value: index,
+                      //     groupValue: selectedRadio,
+                      //     onChanged: (int value) {
+                      //       setState(() => selectedRadio = value);
+                      //     },
+                      //   );
+                      // }),
+
+                      );
+                },
+              ),
+            );
+          });
+    }
+
     return Scaffold(
+        key: scaffoldKey,
         body: SingleChildScrollView(
             child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -737,7 +825,9 @@ class _DepositFormPage extends State<DepositFormPage> {
                                       color: Colors.white,
                                       child: TextButton(
                                         child: Text('Upload Image'),
-                                        onPressed: getImage,
+                                        onPressed: () {
+                                          _showFormDialog(context);
+                                        },
                                       ),
                                     ),
                                   ),
@@ -814,7 +904,7 @@ class _DepositFormPage extends State<DepositFormPage> {
                 ))));
   }
 
-  Future sendImage(PickedFile pickedFile,context) async {
+  Future sendImage(PickedFile pickedFile, context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
     String uid = prefs.getString('uid');
@@ -856,26 +946,20 @@ class _DepositFormPage extends State<DepositFormPage> {
 
     // send
     var response = await request.send();
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
 
-     var balancer= prefs.getString('balance');
+    var balancer = prefs.getString('balance');
     print("******************* 200 *******************");
-    if(response.statusCode==200){
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => Profile(balance: balancer,
-                    user: UserData(
-                        1,
-                        "+251923805630",
-                        "abeselom@email.com",
-                        "251923805630",
-                        "+251",
-                        "Ethiopia",
-                        "this.password",
-                        null,
-                        null))));
+    if (response.statusCode == 200) {
+      showInSnackBar('Deposit Successful');
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPageOtp()));
+    } else {
+      setState(() {
+        butloader = false;
+      });
+      showInSnackBar('Something happened.Please try again');
     }
-
-
 
     // listen for response
     response.stream.transform(utf8.decoder).listen((value) {
