@@ -190,6 +190,9 @@ class AuthAPI {
     }
   }
 
+
+
+
   Future getUserBalance() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
@@ -261,6 +264,62 @@ class AuthAPI {
       return null;
     }
   }
+
+
+
+  Future profileform(String fname, String lname,String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> body = {
+      "client_id": "phone_number_authentication",
+      "client_secret": "secret",
+      "grant_type": "PhoneNumber",
+      "scope": "openid profile offline_access",
+    "firstName": fname,
+    "lastName": lname,
+    "email": email
+    };
+
+    Map<String, String> headers = {
+      'Accept': 'application/json',
+      'Content-type': 'application/x-www-form-urlencoded',
+    };
+
+    try {
+      return await http
+          .post(Uri.encodeFull(authUrl + "/api/users/profile"),
+              headers: headers, body: body)
+          .then((http.Response response) async {
+        final int statusCode = response.statusCode;
+        print(
+            "*************************** verifyCode ${response.statusCode}***********************************");
+        if (response.statusCode == 200) {
+          print(response.body);
+          // var userdata = json.decode(response.body);
+          // prefs.setString('token', userdata['access_token']);
+          // // prefs.setString('acctoken', userdata['access_token']);
+
+          // prefs.setString('expires_in', userdata['expires_in'].toString());
+          // prefs.setString('refresh_token', userdata['refresh_token']);
+          // final DateTime now = DateTime.now();
+          // final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm');
+          // prefs.setString("currentTime", formatter.format(now));
+          // print("VerifyCode Success");
+          return response.body;
+        }
+        if (statusCode < 200 || statusCode > 400 || json == null) {
+          throw new Exception("Error while fetching data");
+        }
+        return statusCode;
+      });
+    } catch (Exception, s) {
+      print("Error AuthAPI verifyCode : ${Exception.toString()}");
+      return 401;
+    }
+  }
+
+
+
 
   Future<int> putUser({Map body}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -118,7 +118,8 @@ class _MyHomePageState extends State<MyAppPage> {
 
     List<Widget> _buildScreens() {
       return [
-        MyHomePage(), AuthorProfile(),
+        MyHomePage(), 
+        AuthorProfile(),
         // AuthorProfile(),
         //  Profile(
         //       // activeBalance: value['active_balance'],
@@ -135,7 +136,7 @@ class _MyHomePageState extends State<MyAppPage> {
         //           "this.password",
         //           null,
         //           null))
-        LoginPageOtp()
+        LoginPageOtp(),
         //  LoginPage(1)
         // ProfileFormPage()
       ];
@@ -151,7 +152,7 @@ class _MyHomePageState extends State<MyAppPage> {
         ),
         PersistentBottomNavBarItem(
           icon: Icon(CupertinoIcons.person),
-          title: ("Settings"),
+          title: ("Authors"),
           activeColor: Color(0xFF1EB998),
           inactiveColor: CupertinoColors.systemGrey,
         ),

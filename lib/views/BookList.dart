@@ -115,13 +115,7 @@ class _BookList extends State<BookList> {
     super.initState();
   }
 
-  Future<bool> _willPopCallback() async {
-    // await showDialog or Show add banners or whatever
-    // then
-    bl.BlocProvider.of<NavigationBloc>(context)
-        .add(NavigationEvents.HomePageClickedEvent);
-    return false; // return true if the route to be popped
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -129,111 +123,108 @@ class _BookList extends State<BookList> {
     selectedCatsList.forEach((element) {
       selectedList.add(element.name);
     });
-    return WillPopScope(
-      onWillPop: _willPopCallback,
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              TitleHead(
-                title: null,
-                logo: 'assets/logo_small.png',
-                notification: "2",
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            TitleHead(
+              title: null,
+              logo: 'assets/logo_small.png',
+              notification: "2",
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  selectedCatsList.isNotEmpty
+                      ? Expanded(
+                          child: ListTile(
+                            title: Text("Showing", style: kTitleTextStyle),
+                            subtitle: Text(selectedList.join(" , "),
+                                style: TextStyle(fontSize: 10)),
+                          ),
+                        )
+                      : Text("Showing All Categories",
+                          style: kTitleTextStyle),
+                  InkWell(
+                    onTap: () {
+                      _showReportDialog();
+                    },
+                    child: Text(
+                      "Filter",
+                      style: kSubtitleTextSyule.copyWith(color: kBlueColor),
+                    ),
+                  )
+                ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    selectedCatsList.isNotEmpty
-                        ? Expanded(
-                            child: ListTile(
-                              title: Text("Showing", style: kTitleTextStyle),
-                              subtitle: Text(selectedList.join(" , "),
-                                  style: TextStyle(fontSize: 10)),
-                            ),
-                          )
-                        : Text("Showing All Categories",
-                            style: kTitleTextStyle),
-                    InkWell(
-                      onTap: () {
-                        _showReportDialog();
-                      },
-                      child: Text(
-                        "Filter",
-                        style: kSubtitleTextSyule.copyWith(color: kBlueColor),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              books != null
-                  ? Expanded(
-                      child: StaggeredGridView.countBuilder(
-                        padding: EdgeInsets.all(20),
-                        crossAxisCount: 2,
-                        itemCount: books.length,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BookDetails(books[index])));
-                            },
-                            child: Column(children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.all(20),
-                                height: index.isEven ? 200 : 240,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  image: DecorationImage(
-                                    image: NetworkImage(books[index].image),
-                                    fit: BoxFit.fill,
-                                  ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            books != null
+                ? Expanded(
+                    child: StaggeredGridView.countBuilder(
+                      padding: EdgeInsets.all(20),
+                      crossAxisCount: 2,
+                      itemCount: books.length,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        BookDetails(books[index])));
+                          },
+                          child: Column(children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              height: index.isEven ? 200 : 240,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                image: DecorationImage(
+                                  image: NetworkImage(books[index].image),
+                                  fit: BoxFit.fill,
                                 ),
                               ),
-                              SizedBox(
-                                height: 18,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    books[index].name,
-                                    style: kTitleTextStyle,
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  books[index].name,
+                                  style: kTitleTextStyle,
+                                ),
+                                Text(
+                                  'Type: ${books[index].price}',
+                                  style: TextStyle(
+                                    color: kTextColor.withOpacity(.5),
                                   ),
-                                  Text(
-                                    'Type: ${books[index].price}',
-                                    style: TextStyle(
-                                      color: kTextColor.withOpacity(.5),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ]),
-                          );
-                        },
-                        staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                      ),
-                    )
-                  : Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                                )
+                              ],
+                            ),
+                          ]),
+                        );
+                      },
+                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
                     ),
-            ],
-          ),
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+          ],
         ),
       ),
     );

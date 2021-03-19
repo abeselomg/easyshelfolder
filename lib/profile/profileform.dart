@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart' as bl;
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'ResetPass.dart';
 // import 'Signup.dart';
+import 'package:easy_shelf/authapi/api.dart';
 
 class FormData {
   String email;
@@ -62,6 +63,8 @@ class _ProfileFormPage extends State<ProfileFormPage> {
   TextEditingController emailInputController;
   TextEditingController fnameInputController;
   TextEditingController lnameInputController;
+  TextEditingController pinInputController;
+
 
   var _pressed;
   String countryCode, countryName;
@@ -69,6 +72,7 @@ class _ProfileFormPage extends State<ProfileFormPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   ProgressDialog progressDialog;
   bool countDown = false;
+  AuthAPI authAPI = new AuthAPI();
 
   @override
   initState() {
@@ -81,6 +85,8 @@ class _ProfileFormPage extends State<ProfileFormPage> {
     emailInputController = new TextEditingController();
     fnameInputController = new TextEditingController();
     lnameInputController = new TextEditingController();
+    pinInputController = new TextEditingController();
+
     super.initState();
   }
 
@@ -373,6 +379,7 @@ class _ProfileFormPage extends State<ProfileFormPage> {
 
             pref.setBool("completeprofile", true);
             progressDialog.hide();
+            // authAPI.profileform(code, phoneNumber)
 
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (BuildContext context) => Profile(balance: balance,activeBalance: activebalance,pendingBalance: pendingbalance,
@@ -487,7 +494,7 @@ class _ProfileFormPage extends State<ProfileFormPage> {
       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: TextInputType.name,
         autofocus: false,
         validator: (value) {
           if (value == null) {
@@ -508,12 +515,40 @@ class _ProfileFormPage extends State<ProfileFormPage> {
     );
   }
 
+  Widget showPinInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: new TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.phone,
+        autofocus: false,
+        maxLength: 4,
+        validator: (value) {
+          if (value == null) {
+            return "Input cannot be null";
+          } else {
+            return null;
+          }
+        },
+        decoration: new InputDecoration(
+            hintText: 'Pin',
+            icon: new Icon(
+              Icons.person,
+              color: Colors.grey,
+            )),
+        controller: pinInputController,
+//        onSaved: (value) => _email = value.trim(),
+      ),
+    );
+  }
+
+
   Widget showFnameInput() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: TextInputType.name,
         autofocus: false,
         validator: (value) {
           if (value == null) {
@@ -658,6 +693,7 @@ class _ProfileFormPage extends State<ProfileFormPage> {
                                   showFnameInput(),
                                   showLnameInput(),
                                   showEmailInput(),
+                                  showPinInput(),
 
                                   // if(this.type == 0)
                                   // showPasswordInput(),

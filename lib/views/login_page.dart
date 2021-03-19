@@ -75,7 +75,7 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
     return Image.asset("assets/images/shelf.png",
         width: 130, height: 130, gaplessPlayback: false, fit: BoxFit.fill);
   }
-
+  
   userBalance() {
     loading
         ? Container(
@@ -89,9 +89,9 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
       prefs.setString('balance', value['user']['wallet']['balance']);
       prefs.setString('activebalance', value['active_balance']);
       prefs.setString('pendingbalance', value['pending_balance']);
-      var profilevalue = prefs.getBool("completeprofile");
+      var profilevalue = prefs.getBool("ompleteprofile");
 
-      profilevalue == false
+      profilevalue != true
           ? Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) =>
                   ProfileFormPage(0, value['user']['wallet']['balance'],value['active_balance'],value['pending_balance'])))
@@ -132,7 +132,7 @@ class _LoginPageOtpState extends State<LoginPageOtp> {
 
   checkUserSignedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token');
+    String token = prefs.getString('tokenn');
     String uid = prefs.getString('uid');
 
     if (token != null) {
